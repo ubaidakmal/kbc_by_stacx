@@ -13,6 +13,19 @@ import '../widgets/splash_loading_text.dart';
 import '../widgets/splash_smoke_animation.dart';
 import '../widgets/splash_sparks_animation.dart';
 
+const _brandStart = Duration.zero;
+const _brandDuration = Duration(milliseconds: 650);
+const _headlineStart = Duration(milliseconds: 780);
+const _headlineDuration = Duration(milliseconds: 780);
+const _subtitleStart = Duration(milliseconds: 1660);
+const _subtitleDuration = Duration(milliseconds: 650);
+const _fireStart = Duration(milliseconds: 2410);
+const _fireDuration = Duration(milliseconds: 760);
+const _potStart = Duration(milliseconds: 3270);
+const _potDuration = Duration(milliseconds: 780);
+const _loadingStart = Duration(milliseconds: 4180);
+const _loadingDuration = Duration(milliseconds: 650);
+
 class SplashScreen extends StatelessWidget {
   const SplashScreen({super.key});
 
@@ -23,15 +36,20 @@ class SplashScreen extends StatelessWidget {
         builder: (context, constraints) {
           final width = constraints.maxWidth;
           final height = constraints.maxHeight;
+          final phoneWidth = width < 430;
           final compactHeight = height < 680;
           final horizontalPadding = width < 420 ? 20.0 : 32.0;
           final contentWidth = math.min(
             width - (horizontalPadding * 2),
             AppConstants.maxContentWidth,
           );
-          final sceneHeight = (height * (compactHeight ? 0.39 : 0.48))
-              .clamp(compactHeight ? 224.0 : 250.0, 430.0)
-              .toDouble();
+          final sceneHeight =
+              (height * (compactHeight ? 0.36 : (phoneWidth ? 0.34 : 0.48)))
+                  .clamp(
+                    compactHeight ? 196.0 : (phoneWidth ? 280.0 : 250.0),
+                    430.0,
+                  )
+                  .toDouble();
           final sceneWidth = math.min(contentWidth, 520.0);
           final fireSize = (sceneWidth * 0.66).clamp(200.0, 350.0).toDouble();
           final potWidth = (sceneWidth * 0.54).clamp(158.0, 284.0).toDouble();
@@ -55,20 +73,40 @@ class SplashScreen extends StatelessWidget {
                       child: Padding(
                         padding: EdgeInsets.symmetric(
                           horizontal: horizontalPadding,
-                          vertical: compactHeight ? 10 : 50,
+                          vertical: compactHeight ? 10 : (phoneWidth ? 24 : 50),
                         ),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
                             const _BrandPill()
                                 .animate()
-                                .fadeIn(duration: 650.ms)
-                                .slideY(begin: -0.18, end: 0),
+                                .fadeIn(
+                                  delay: _brandStart,
+                                  duration: _brandDuration,
+                                  curve: Curves.easeOutCubic,
+                                )
+                                .slideY(
+                                  begin: -0.8,
+                                  end: 0,
+                                  delay: _brandStart,
+                                  duration: _brandDuration,
+                                  curve: Curves.easeOutBack,
+                                ),
                             SizedBox(height: compactHeight ? 12 : 30),
                             _GradientHeadline(fontSize: headlineSize)
                                 .animate()
-                                .fadeIn(duration: 720.ms, delay: 180.ms)
-                                .slideY(begin: 0.18, end: 0),
+                                .fadeIn(
+                                  delay: _headlineStart,
+                                  duration: _headlineDuration,
+                                  curve: Curves.easeOutCubic,
+                                )
+                                .slideY(
+                                  begin: 0.58,
+                                  end: 0,
+                                  delay: _headlineStart,
+                                  duration: _headlineDuration,
+                                  curve: Curves.easeOutBack,
+                                ),
                             SizedBox(height: compactHeight ? 8 : 20),
                             ConstrainedBox(
                                   constraints: const BoxConstraints(
@@ -81,8 +119,18 @@ class SplashScreen extends StatelessWidget {
                                   ),
                                 )
                                 .animate()
-                                .fadeIn(duration: 720.ms, delay: 320.ms)
-                                .slideY(begin: 0.2, end: 0),
+                                .fadeIn(
+                                  delay: _subtitleStart,
+                                  duration: _subtitleDuration,
+                                  curve: Curves.easeOutCubic,
+                                )
+                                .slideX(
+                                  begin: 0.42,
+                                  end: 0,
+                                  delay: _subtitleStart,
+                                  duration: _subtitleDuration,
+                                  curve: Curves.easeOutCubic,
+                                ),
                             SizedBox(height: compactHeight ? 8 : 12),
 
                             Align(
@@ -91,22 +139,26 @@ class SplashScreen extends StatelessWidget {
                                 mainAxisSize: MainAxisSize.min,
                                 children: [
                                   _CookingScene(
-                                        sceneWidth: sceneWidth,
-                                        sceneHeight: sceneHeight,
-                                        fireSize: fireSize,
-                                        potWidth: potWidth,
-                                      )
-                                      .animate()
-                                      .fadeIn(duration: 900.ms, delay: 100.ms)
-                                      .scale(
-                                        begin: const Offset(0.96, 0.96),
-                                        end: const Offset(1, 1),
-                                      ),
-                                  VerticalGap(compactHeight ? 4 : 20),
-                                  const SplashLoadingText().animate().fadeIn(
-                                    duration: 650.ms,
-                                    delay: 560.ms,
+                                    sceneWidth: sceneWidth,
+                                    sceneHeight: sceneHeight,
+                                    fireSize: fireSize,
+                                    potWidth: potWidth,
                                   ),
+                                  VerticalGap(compactHeight ? 4 : 20),
+                                  const SplashLoadingText()
+                                      .animate()
+                                      .fadeIn(
+                                        delay: _loadingStart,
+                                        duration: _loadingDuration,
+                                        curve: Curves.easeOutCubic,
+                                      )
+                                      .slideY(
+                                        begin: 0.32,
+                                        end: 0,
+                                        delay: _loadingStart,
+                                        duration: _loadingDuration,
+                                        curve: Curves.easeOutCubic,
+                                      ),
                                   VerticalGap(compactHeight ? 4 : 40),
                                 ],
                               ),
@@ -371,21 +423,58 @@ class _CookingScene extends StatelessWidget {
         alignment: Alignment.center,
         clipBehavior: Clip.none,
         children: [
-          Positioned.fill(child: SplashSparksAnimation()),
-          Positioned(
-            bottom: sceneHeight * 0.00,
-            child: SplashFirewoodAnimation(size: fireSize),
-          ),
-          Positioned(
-            top: sceneHeight * 0.06,
-            child: SplashSmokeAnimation(
-              width: potWidth * 0.92,
-              height: sceneHeight * 0.46,
+          Positioned.fill(
+            child: const SplashSparksAnimation().animate().fadeIn(
+              delay: _fireStart,
+              duration: _fireDuration,
+              curve: Curves.easeOutCubic,
             ),
           ),
           Positioned(
+            bottom: sceneHeight * 0.00,
+            child: SplashFirewoodAnimation(size: fireSize)
+                .animate()
+                .fadeIn(
+                  delay: _fireStart,
+                  duration: _fireDuration,
+                  curve: Curves.easeOutCubic,
+                )
+                .slideX(
+                  begin: -0.72,
+                  end: 0,
+                  delay: _fireStart,
+                  duration: _fireDuration,
+                  curve: Curves.easeOutBack,
+                ),
+          ),
+          Positioned(
+            top: sceneHeight * 0.06,
+            child:
+                SplashSmokeAnimation(
+                  width: potWidth * 0.92,
+                  height: sceneHeight * 0.46,
+                ).animate().fadeIn(
+                  delay: _potStart,
+                  duration: _potDuration,
+                  curve: Curves.easeOutCubic,
+                ),
+          ),
+          Positioned(
             bottom: sceneHeight * 0.11,
-            child: SplashCookingPot(width: potWidth),
+            child: SplashCookingPot(width: potWidth)
+                .animate()
+                .fadeIn(
+                  delay: _potStart,
+                  duration: _potDuration,
+                  curve: Curves.easeOutCubic,
+                )
+                .slideX(
+                  begin: 0.72,
+                  end: 0,
+                  delay: _potStart,
+                  duration: _potDuration,
+                  curve: Curves.easeOutBack,
+                ),
           ),
         ],
       ),

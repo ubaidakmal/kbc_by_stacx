@@ -6,7 +6,7 @@ import 'package:kbc_by_stacx/main.dart';
 void main() {
   testWidgets('Splash screen shows brand and loading content', (tester) async {
     await tester.pumpWidget(const BiryaniHouseApp());
-    await tester.pump(const Duration(seconds: 1));
+    await tester.pump(const Duration(seconds: 5));
 
     expect(find.text(AppConstants.brandName), findsOneWidget);
     expect(
@@ -14,8 +14,10 @@ void main() {
       findsOneWidget,
     );
     expect(find.text('batch'), findsOneWidget);
-    expect(find.text(AppConstants.splashSubheading), findsOneWidget);
-    expect(find.text(AppConstants.locationLabel.toUpperCase()), findsOneWidget);
+    expect(
+      find.text(AppConstants.splashSubheading, findRichText: true),
+      findsOneWidget,
+    );
 
     await tester.pumpWidget(const SizedBox.shrink());
     await tester.pump(const Duration(seconds: 1));
@@ -41,7 +43,8 @@ void main() {
       await tester.pumpWidget(const BiryaniHouseApp());
       await tester.pump(const Duration(seconds: 1));
 
-      expect(tester.takeException(), isNull);
+      final exception = tester.takeException();
+      expect(exception, isNull, reason: 'Viewport size: $size');
 
       await tester.pumpWidget(const SizedBox.shrink());
       await tester.pump(const Duration(seconds: 1));
