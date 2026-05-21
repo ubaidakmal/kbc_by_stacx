@@ -1,30 +1,46 @@
-// This is a basic Flutter widget test.
-//
-// To perform an interaction with a widget in your test, use the WidgetTester
-// utility in the flutter_test package. For example, you can send tap and scroll
-// gestures. You can also use WidgetTester to find child widgets in the widget
-// tree, read text, and verify that the values of widget properties are correct.
-
-import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
-
+import 'package:kbc_by_stacx/core/constants/app_constants.dart';
 import 'package:kbc_by_stacx/main.dart';
 
 void main() {
-  testWidgets('Counter increments smoke test', (WidgetTester tester) async {
-    // Build our app and trigger a frame.
-    await tester.pumpWidget(const MyApp());
+  testWidgets('Splash screen shows brand and loading content', (tester) async {
+    await tester.pumpWidget(const BiryaniHouseApp());
+    await tester.pump(const Duration(seconds: 1));
 
-    // Verify that our counter starts at 0.
-    expect(find.text('0'), findsOneWidget);
-    expect(find.text('1'), findsNothing);
+    expect(find.text(AppConstants.brandName), findsOneWidget);
+    expect(find.text(AppConstants.splashHeadline), findsOneWidget);
+    expect(find.text(AppConstants.splashSubheading), findsOneWidget);
+    expect(find.text(AppConstants.locationLabel.toUpperCase()), findsOneWidget);
 
-    // Tap the '+' icon and trigger a frame.
-    await tester.tap(find.byIcon(Icons.add));
-    await tester.pump();
+    await tester.pumpWidget(const SizedBox.shrink());
+    await tester.pump(const Duration(seconds: 1));
+  });
 
-    // Verify that our counter has incremented.
-    expect(find.text('0'), findsNothing);
-    expect(find.text('1'), findsOneWidget);
+  testWidgets('Splash screen lays out across common viewport sizes', (
+    tester,
+  ) async {
+    final binding = TestWidgetsFlutterBinding.ensureInitialized();
+    final sizes = <Size>[
+      const Size(320, 568),
+      const Size(390, 844),
+      const Size(768, 1024),
+      const Size(1440, 900),
+    ];
+
+    addTearDown(() async {
+      await binding.setSurfaceSize(null);
+    });
+
+    for (final size in sizes) {
+      await binding.setSurfaceSize(size);
+      await tester.pumpWidget(const BiryaniHouseApp());
+      await tester.pump(const Duration(seconds: 1));
+
+      expect(tester.takeException(), isNull);
+
+      await tester.pumpWidget(const SizedBox.shrink());
+      await tester.pump(const Duration(seconds: 1));
+    }
   });
 }
