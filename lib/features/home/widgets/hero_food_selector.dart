@@ -1,5 +1,3 @@
-import 'dart:math' as math;
-
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:provider/provider.dart';
@@ -95,18 +93,12 @@ class _CurvedFoodPathPainter extends CustomPainter {
         size.height * 0.91,
       );
 
-    final pathMetric = path.computeMetrics().first;
-    final dotPaint = Paint()
-      ..color = AppColors.splashTextPrimary.withValues(alpha: 0.32)
-      ..style = PaintingStyle.fill;
-
-    for (var i = 0; i <= 32; i++) {
-      final distance = pathMetric.length * (i / 32);
-      final tangent = pathMetric.getTangentForOffset(distance);
-      if (tangent == null) continue;
-      final pulse = math.sin((i / 32) * math.pi);
-      canvas.drawCircle(tangent.position, 1.8 + pulse * 0.8, dotPaint);
-    }
+    final pathPaint = Paint()
+      ..color = AppColors.splashTextPrimary.withValues(alpha: 0.26)
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = compact ? 1.5 : 2
+      ..strokeCap = StrokeCap.round;
+    canvas.drawPath(path, pathPaint);
 
     final linePaint = Paint()
       ..color = AppColors.splashTextYellow.withValues(alpha: 0.18)
