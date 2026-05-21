@@ -50,4 +50,51 @@ void main() {
       await tester.pump(const Duration(seconds: 1));
     }
   });
+
+  testWidgets('Home hero appears after splash completes', (tester) async {
+    await tester.pumpWidget(const BiryaniHouseApp());
+    await tester.pump(AppConstants.splashDuration);
+    await tester.pump(const Duration(seconds: 5));
+
+    expect(find.text(AppConstants.heroBrandName), findsOneWidget);
+    expect(
+      find.text(AppConstants.heroHeadline, findRichText: true),
+      findsOneWidget,
+    );
+    expect(find.text(AppConstants.heroDescription), findsOneWidget);
+    expect(find.text(AppConstants.heroCta), findsWidgets);
+    expect(find.text('Beef Biryani'), findsWidgets);
+
+    await tester.pumpWidget(const SizedBox.shrink());
+    await tester.pump(const Duration(seconds: 1));
+  });
+
+  testWidgets('Home hero lays out across common viewport sizes', (
+    tester,
+  ) async {
+    final binding = TestWidgetsFlutterBinding.ensureInitialized();
+    final sizes = <Size>[
+      const Size(320, 568),
+      const Size(390, 844),
+      const Size(768, 1024),
+      const Size(1440, 900),
+    ];
+
+    addTearDown(() async {
+      await binding.setSurfaceSize(null);
+    });
+
+    for (final size in sizes) {
+      await binding.setSurfaceSize(size);
+      await tester.pumpWidget(const BiryaniHouseApp());
+      await tester.pump(AppConstants.splashDuration);
+      await tester.pump(const Duration(seconds: 5));
+
+      final exception = tester.takeException();
+      expect(exception, isNull, reason: 'Viewport size: $size');
+
+      await tester.pumpWidget(const SizedBox.shrink());
+      await tester.pump(const Duration(seconds: 1));
+    }
+  });
 }
