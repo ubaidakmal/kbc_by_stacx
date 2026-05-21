@@ -9,7 +9,11 @@ void main() {
     await tester.pump(const Duration(seconds: 1));
 
     expect(find.text(AppConstants.brandName), findsOneWidget);
-    expect(find.text(AppConstants.splashHeadline), findsOneWidget);
+    expect(
+      find.text('Cooking the next hot', findRichText: true),
+      findsOneWidget,
+    );
+    expect(find.text('batch'), findsOneWidget);
     expect(find.text(AppConstants.splashSubheading), findsOneWidget);
     expect(find.text(AppConstants.locationLabel.toUpperCase()), findsOneWidget);
 

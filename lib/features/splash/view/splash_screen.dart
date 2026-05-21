@@ -35,8 +35,8 @@ class SplashScreen extends StatelessWidget {
           final sceneWidth = math.min(contentWidth, 520.0);
           final fireSize = (sceneWidth * 0.66).clamp(200.0, 350.0).toDouble();
           final potWidth = (sceneWidth * 0.54).clamp(158.0, 284.0).toDouble();
-          final headlineSize = (width * 0.08)
-              .clamp(compactHeight ? 24.0 : 27.0, 42.0)
+          final headlineSize = (contentWidth * (compactHeight ? 0.17 : 0.19))
+              .clamp(compactHeight ? 38.0 : 44.0, 82.0)
               .toDouble();
 
           return SizedBox(
@@ -55,65 +55,60 @@ class SplashScreen extends StatelessWidget {
                       child: Padding(
                         padding: EdgeInsets.symmetric(
                           horizontal: horizontalPadding,
-                          vertical: compactHeight ? 10 : 22,
+                          vertical: compactHeight ? 10 : 50,
                         ),
                         child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
                             const _BrandPill()
                                 .animate()
                                 .fadeIn(duration: 650.ms)
                                 .slideY(begin: -0.18, end: 0),
-                            Expanded(
-                              child: Center(
-                                child: Column(
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: [
-                                    _CookingScene(
-                                          sceneWidth: sceneWidth,
-                                          sceneHeight: sceneHeight,
-                                          fireSize: fireSize,
-                                          potWidth: potWidth,
-                                        )
-                                        .animate()
-                                        .fadeIn(duration: 900.ms, delay: 100.ms)
-                                        .scale(
-                                          begin: const Offset(0.96, 0.96),
-                                          end: const Offset(1, 1),
-                                        ),
-                                    VerticalGap(compactHeight ? 10 : 18),
-                                    _GradientHeadline(fontSize: headlineSize)
-                                        .animate()
-                                        .fadeIn(duration: 720.ms, delay: 280.ms)
-                                        .slideY(begin: 0.18, end: 0),
-                                    const SizedBox(height: 10),
-                                    ConstrainedBox(
-                                          constraints: const BoxConstraints(
-                                            maxWidth: 500,
-                                          ),
-                                          child: _SplashSubtitle(
-                                            fontSize:
-                                                compactHeight || width < 390
-                                                ? 13
-                                                : 16,
-                                          ),
-                                        )
-                                        .animate()
-                                        .fadeIn(duration: 720.ms, delay: 420.ms)
-                                        .slideY(begin: 0.2, end: 0),
-                                  ],
-                                ),
-                              ),
-                            ),
-                            const SplashLoadingText().animate().fadeIn(
-                              duration: 650.ms,
-                              delay: 560.ms,
-                            ),
+                            SizedBox(height: compactHeight ? 12 : 30),
+                            _GradientHeadline(fontSize: headlineSize)
+                                .animate()
+                                .fadeIn(duration: 720.ms, delay: 180.ms)
+                                .slideY(begin: 0.18, end: 0),
+                            SizedBox(height: compactHeight ? 8 : 20),
+                            ConstrainedBox(
+                                  constraints: const BoxConstraints(
+                                    maxWidth: 500,
+                                  ),
+                                  child: _SplashSubtitle(
+                                    fontSize: compactHeight || width < 390
+                                        ? 13
+                                        : 16,
+                                  ),
+                                )
+                                .animate()
+                                .fadeIn(duration: 720.ms, delay: 320.ms)
+                                .slideY(begin: 0.2, end: 0),
                             SizedBox(height: compactHeight ? 8 : 12),
-                            Text(
-                              AppConstants.locationLabel.toUpperCase(),
-                              style: AppTextStyles.bodySmall.copyWith(
-                                color: AppColors.splashTextSoft,
-                                letterSpacing: 1.6,
+
+                            Align(
+                              alignment: Alignment.center,
+                              child: Column(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  _CookingScene(
+                                        sceneWidth: sceneWidth,
+                                        sceneHeight: sceneHeight,
+                                        fireSize: fireSize,
+                                        potWidth: potWidth,
+                                      )
+                                      .animate()
+                                      .fadeIn(duration: 900.ms, delay: 100.ms)
+                                      .scale(
+                                        begin: const Offset(0.96, 0.96),
+                                        end: const Offset(1, 1),
+                                      ),
+                                  VerticalGap(compactHeight ? 4 : 20),
+                                  const SplashLoadingText().animate().fadeIn(
+                                    duration: 650.ms,
+                                    delay: 560.ms,
+                                  ),
+                                  VerticalGap(compactHeight ? 4 : 40),
+                                ],
                               ),
                             ),
                           ],
@@ -262,32 +257,63 @@ class _GradientHeadline extends StatelessWidget {
     final baseStyle = AppTextStyles.headingLarge.copyWith(
       fontSize: fontSize,
       color: AppColors.splashTextPrimary,
+      fontWeight: FontWeight.w900,
+      height: 0.92,
     );
 
-    return Text.rich(
-      TextSpan(
-        children: [
-          TextSpan(text: 'Cooking the ', style: baseStyle),
-          TextSpan(
-            text: 'next hot ',
-            style: baseStyle.copyWith(color: AppColors.splashTextYellow),
-          ),
-          TextSpan(
-            text: 'batch',
-            style: baseStyle.copyWith(
-              foreground: Paint()
-                ..shader = const LinearGradient(
-                  colors: [
-                    AppColors.splashTextYellow,
-                    AppColors.splashTextOrange,
-                    AppColors.splashTextRed,
+    return Semantics(
+      label: AppConstants.splashHeadline,
+      child: SizedBox(
+        width: double.infinity,
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            FittedBox(
+              fit: BoxFit.scaleDown,
+              child: Text.rich(
+                TextSpan(
+                  children: [
+                    TextSpan(text: 'Cooking the ', style: baseStyle),
+                    TextSpan(
+                      text: 'next hot',
+                      style: baseStyle.copyWith(
+                        color: AppColors.splashTextYellow,
+                      ),
+                    ),
                   ],
-                ).createShader(const Rect.fromLTWH(0, 0, 150, 48)),
+                ),
+                textAlign: TextAlign.center,
+              ),
             ),
-          ),
-        ],
+            FittedBox(
+              fit: BoxFit.scaleDown,
+              child: ShaderMask(
+                blendMode: BlendMode.srcIn,
+                shaderCallback: (bounds) {
+                  return const LinearGradient(
+                    begin: Alignment.centerLeft,
+                    end: Alignment.centerRight,
+                    colors: [
+                      AppColors.splashTextYellow,
+                      AppColors.splashTextOrange,
+                      AppColors.splashTextRed,
+                    ],
+                    stops: [0.0, 0.54, 1.0],
+                  ).createShader(bounds);
+                },
+                child: Text(
+                  'batch',
+                  textAlign: TextAlign.center,
+                  style: baseStyle.copyWith(
+                    color: AppColors.splashTextYellow,
+                    fontSize: fontSize * 0.98,
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
-      textAlign: TextAlign.center,
     );
   }
 }
@@ -308,7 +334,7 @@ class _SplashSubtitle extends StatelessWidget {
       TextSpan(
         children: [
           TextSpan(
-            text: 'Fresh Pakistani and Indian style biryani, fired up for ',
+            text: 'Fresh Karachi style biryani, fired up for ',
             style: style,
           ),
           TextSpan(
@@ -345,7 +371,6 @@ class _CookingScene extends StatelessWidget {
         alignment: Alignment.center,
         clipBehavior: Clip.none,
         children: [
-
           Positioned.fill(child: SplashSparksAnimation()),
           Positioned(
             bottom: sceneHeight * 0.00,

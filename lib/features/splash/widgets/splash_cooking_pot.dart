@@ -2,7 +2,6 @@ import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
 
-import '../../../core/constants/app_colors.dart';
 import '../../../core/constants/app_images.dart';
 
 class SplashCookingPot extends StatefulWidget {
@@ -53,7 +52,6 @@ class _SplashCookingPotState extends State<SplashCookingPot>
           alignment: Alignment.bottomCenter,
           clipBehavior: Clip.none,
           children: [
-
             Image.asset(
               AppImages.cookingPot,
               width: widget.width,
