@@ -47,17 +47,17 @@ class _HeroDishShowcaseState extends State<HeroDishShowcase>
     final selectedDish = context.watch<HomeViewModel>().selectedDish;
     final width = widget.compact ? 300.0 : 470.0;
     final height = widget.compact ? 340.0 : 520.0;
-    final dishSize = widget.compact ? 300.0 : 500.0;
+    final dishSize = widget.compact ? 300.0 : 480.0;
 
     return SizedBox(
           width: width,
           height: height,
           child: Stack(
-            alignment: Alignment.centerRight,
+            alignment: Alignment.center,
             clipBehavior: Clip.none,
             children: [
               Positioned.fill(
-                left: widget.compact ? 18 : 28,
+                left: widget.compact ? 18 : 50,
                 child: DecoratedBox(
                   decoration: BoxDecoration(
                     color: AppColors.cream.withValues(alpha: 0.08),
@@ -136,7 +136,7 @@ class _HeroDishShowcaseState extends State<HeroDishShowcase>
                           semanticLabel: selectedDish.title,
                           width: dishSize,
                           height: dishSize,
-                          fit: BoxFit.contain,
+                          fit: BoxFit.cover,
                         ),
                       ),
                     ],
