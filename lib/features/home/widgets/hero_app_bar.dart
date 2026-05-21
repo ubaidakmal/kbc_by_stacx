@@ -21,37 +21,86 @@ class HeroAppBar extends StatelessWidget {
       builder: (context, constraints) {
         final compact = constraints.maxWidth < 760;
 
-        return Padding(
-              padding: const EdgeInsets.symmetric(vertical: 14),
-              child: Row(
-                children: [
-                  Expanded(
-                    child: Text(
-                      AppConstants.heroBrandName,
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      style: AppTextStyles.headingMedium.copyWith(
-                        color: AppColors.splashTextPrimary,
-                        fontSize: compact ? 18 : 22,
-                        fontWeight: FontWeight.w900,
+        return Align(
+              alignment: Alignment.topCenter,
+              child: Padding(
+                padding: const EdgeInsets.symmetric(vertical: 14),
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(999),
+                  child: Container(
+                    constraints: BoxConstraints(
+                      maxWidth: compact ? 360 : 920,
+                      minHeight: 62,
+                    ),
+                    padding: EdgeInsets.symmetric(
+                      horizontal: compact ? 14 : 22,
+                      vertical: 10,
+                    ),
+                    decoration: BoxDecoration(
+                      color: AppColors.white.withValues(alpha: 0.08),
+                      borderRadius: BorderRadius.circular(999),
+                      border: Border.all(
+                        color: AppColors.white.withValues(alpha: 0.18),
+                      ),
+                      boxShadow: [
+                        BoxShadow(
+                          color: AppColors.blackOverlay.withValues(alpha: 0.22),
+                          blurRadius: 28,
+                          offset: const Offset(0, 16),
+                        ),
+                        BoxShadow(
+                          color: AppColors.splashTextYellow.withValues(
+                            alpha: 0.08,
+                          ),
+                          blurRadius: 34,
+                          spreadRadius: 1,
+                        ),
+                      ],
+                      gradient: LinearGradient(
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
+                        colors: [
+                          AppColors.white.withValues(alpha: 0.16),
+                          AppColors.white.withValues(alpha: 0.05),
+                          AppColors.splashTextYellow.withValues(alpha: 0.05),
+                        ],
                       ),
                     ),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Flexible(
+                          child: Text(
+                            AppConstants.heroBrandName,
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: AppTextStyles.headingMedium.copyWith(
+                              color: AppColors.splashTextPrimary,
+                              fontSize: compact ? 17 : 21,
+                              fontWeight: FontWeight.w900,
+                            ),
+                          ),
+                        ),
+                        if (!compact) ...[
+                          const SizedBox(width: 30),
+                          const _NavItem('Home'),
+                          const _NavItem('Menu'),
+                          const _NavItem('Catering'),
+                          const _NavItem('Contact'),
+                          const SizedBox(width: 18),
+                          _IconBubble(icon: Icons.search_rounded),
+                          const SizedBox(width: 10),
+                          _OrderPill(),
+                        ] else ...[
+                          const SizedBox(width: 14),
+                          _OrderPill(compact: true),
+                          const SizedBox(width: 8),
+                          _IconBubble(icon: Icons.menu_rounded, compact: true),
+                        ],
+                      ],
+                    ),
                   ),
-                  if (!compact) ...[
-                    const _NavItem('Home'),
-                    const _NavItem('Menu'),
-                    const _NavItem('Catering'),
-                    const _NavItem('Contact'),
-                    const SizedBox(width: 18),
-                    _IconBubble(icon: Icons.search_rounded),
-                    const SizedBox(width: 10),
-                    _OrderPill(),
-                  ] else ...[
-                    _OrderPill(compact: true),
-                    const SizedBox(width: 10),
-                    _IconBubble(icon: Icons.menu_rounded),
-                  ],
-                ],
+                ),
               ),
             )
             .animate()
@@ -94,23 +143,26 @@ class _NavItem extends StatelessWidget {
 }
 
 class _IconBubble extends StatelessWidget {
-  const _IconBubble({required this.icon});
+  const _IconBubble({required this.icon, this.compact = false});
 
   final IconData icon;
+  final bool compact;
 
   @override
   Widget build(BuildContext context) {
     return Container(
       width: 42,
-      height: 42,
+      height: compact ? 38 : 42,
       decoration: BoxDecoration(
-        color: AppColors.blackOverlay.withValues(alpha: 0.22),
+        color: AppColors.white.withValues(alpha: 0.08),
         borderRadius: BorderRadius.circular(999),
-        border: Border.all(
-          color: AppColors.splashTextYellow.withValues(alpha: 0.24),
-        ),
+        border: Border.all(color: AppColors.white.withValues(alpha: 0.14)),
       ),
-      child: Icon(icon, color: AppColors.splashTextPrimary, size: 20),
+      child: Icon(
+        icon,
+        color: AppColors.splashTextPrimary,
+        size: compact ? 18 : 20,
+      ),
     );
   }
 }

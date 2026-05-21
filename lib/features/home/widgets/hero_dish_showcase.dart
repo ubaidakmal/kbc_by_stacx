@@ -5,7 +5,6 @@ import 'package:flutter_animate/flutter_animate.dart';
 import 'package:provider/provider.dart';
 
 import '../../../core/constants/app_colors.dart';
-import '../../../core/constants/app_text_styles.dart';
 import '../view_model/home_view_model.dart';
 
 class HeroDishShowcase extends StatefulWidget {
@@ -46,94 +45,102 @@ class _HeroDishShowcaseState extends State<HeroDishShowcase>
   @override
   Widget build(BuildContext context) {
     final selectedDish = context.watch<HomeViewModel>().selectedDish;
-    final dishSize = widget.compact ? 260.0 : 390.0;
+    final width = widget.compact ? 300.0 : 470.0;
+    final height = widget.compact ? 340.0 : 520.0;
+    final dishSize = widget.compact ? 300.0 : 500.0;
 
     return SizedBox(
-          width: widget.compact ? 330 : 480,
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
+          width: width,
+          height: height,
+          child: Stack(
+            alignment: Alignment.centerRight,
+            clipBehavior: Clip.none,
             children: [
-              AnimatedBuilder(
-                animation: _floatController,
-                builder: (context, child) {
-                  final wave = Curves.easeInOut.transform(
-                    _floatController.value,
-                  );
-                  return Transform.translate(
-                    offset: Offset(0, math.sin(wave * math.pi) * -10),
-                    child: child,
-                  );
-                },
-                child: Stack(
-                  alignment: Alignment.center,
-                  children: [
-                    Container(
-                      width: dishSize * 0.92,
-                      height: dishSize * 0.92,
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        gradient: RadialGradient(
-                          colors: [
-                            AppColors.splashWarmOrangeGlow.withValues(
-                              alpha: 0.24,
-                            ),
-                            AppColors.splashFireGlow.withValues(alpha: 0.12),
-                            AppColors.splashDeepRed.withValues(alpha: 0),
-                          ],
+              Positioned.fill(
+                left: widget.compact ? 18 : 28,
+                child: DecoratedBox(
+                  decoration: BoxDecoration(
+                    color: AppColors.cream.withValues(alpha: 0.08),
+                    borderRadius: BorderRadius.circular(
+                      widget.compact ? 42 : 58,
+                    ),
+                    border: Border.all(
+                      color: AppColors.splashTextPrimary.withValues(
+                        alpha: 0.08,
+                      ),
+                    ),
+                    boxShadow: [
+                      BoxShadow(
+                        color: AppColors.splashWarmOrangeGlow.withValues(
+                          alpha: 0.2,
                         ),
+                        blurRadius: 70,
+                        offset: const Offset(0, 24),
                       ),
-                    ),
-                    AnimatedSwitcher(
-                      duration: const Duration(milliseconds: 520),
-                      switchInCurve: Curves.easeOutCubic,
-                      switchOutCurve: Curves.easeInCubic,
-                      transitionBuilder: (child, animation) {
-                        final offset = Tween<Offset>(
-                          begin: const Offset(0.34, 0),
-                          end: Offset.zero,
-                        ).animate(animation);
-                        return FadeTransition(
-                          opacity: animation,
-                          child: SlideTransition(
-                            position: offset,
-                            child: child,
-                          ),
-                        );
-                      },
-                      child: Image.asset(
-                        selectedDish.dishImage,
-                        key: ValueKey(selectedDish.title),
-                        width: dishSize,
-                        height: dishSize,
-                        fit: BoxFit.contain,
-                      ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
-              const SizedBox(height: 12),
-              AnimatedSwitcher(
-                duration: const Duration(milliseconds: 360),
-                child: Column(
-                  key: ValueKey(selectedDish.title),
-                  children: [
-                    Text(
-                      selectedDish.title,
-                      textAlign: TextAlign.center,
-                      style: AppTextStyles.headingMedium.copyWith(
-                        color: AppColors.splashTextPrimary,
-                        fontSize: widget.compact ? 18 : 22,
+              Positioned(
+                right: widget.compact ? -6 : -32,
+                child: AnimatedBuilder(
+                  animation: _floatController,
+                  builder: (context, child) {
+                    final wave = Curves.easeInOut.transform(
+                      _floatController.value,
+                    );
+                    return Transform.translate(
+                      offset: Offset(0, math.sin(wave * math.pi) * -10),
+                      child: child,
+                    );
+                  },
+                  child: Stack(
+                    alignment: Alignment.center,
+                    children: [
+                      Container(
+                        width: dishSize * 0.92,
+                        height: dishSize * 0.92,
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          gradient: RadialGradient(
+                            colors: [
+                              AppColors.splashWarmOrangeGlow.withValues(
+                                alpha: 0.24,
+                              ),
+                              AppColors.splashFireGlow.withValues(alpha: 0.12),
+                              AppColors.splashDeepRed.withValues(alpha: 0),
+                            ],
+                          ),
+                        ),
                       ),
-                    ),
-                    const SizedBox(height: 6),
-                    Text(
-                      selectedDish.shortDescription,
-                      textAlign: TextAlign.center,
-                      style: AppTextStyles.bodySmall.copyWith(
-                        color: AppColors.splashTextMuted,
+                      AnimatedSwitcher(
+                        duration: const Duration(milliseconds: 520),
+                        switchInCurve: Curves.easeOutCubic,
+                        switchOutCurve: Curves.easeInCubic,
+                        transitionBuilder: (child, animation) {
+                          final offset = Tween<Offset>(
+                            begin: const Offset(0.34, 0),
+                            end: Offset.zero,
+                          ).animate(animation);
+                          return FadeTransition(
+                            opacity: animation,
+                            child: SlideTransition(
+                              position: offset,
+                              child: child,
+                            ),
+                          );
+                        },
+                        child: Image.asset(
+                          selectedDish.dishImage,
+                          key: ValueKey(selectedDish.title),
+                          semanticLabel: selectedDish.title,
+                          width: dishSize,
+                          height: dishSize,
+                          fit: BoxFit.contain,
+                        ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
             ],

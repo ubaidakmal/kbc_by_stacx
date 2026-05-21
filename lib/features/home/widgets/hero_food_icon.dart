@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
 import '../../../core/constants/app_colors.dart';
-import '../../../core/constants/app_text_styles.dart';
 import '../view_model/home_view_model.dart';
 
 class HeroFoodIcon extends StatelessWidget {
@@ -29,12 +28,12 @@ class HeroFoodIcon extends StatelessWidget {
           child: AnimatedContainer(
             duration: const Duration(milliseconds: 320),
             curve: Curves.easeOutCubic,
-            width: isActive ? 86 : 74,
-            height: isActive ? 102 : 90,
+            width: isActive ? 72 : 62,
+            height: isActive ? 72 : 62,
             padding: const EdgeInsets.all(7),
             decoration: BoxDecoration(
               color: AppColors.blackOverlay.withValues(alpha: 0.28),
-              borderRadius: BorderRadius.circular(22),
+              shape: BoxShape.circle,
               border: Border.all(
                 color: isActive
                     ? AppColors.splashTextYellow
@@ -55,19 +54,10 @@ class HeroFoodIcon extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Expanded(
-                  child: Image.asset(item.iconImage, fit: BoxFit.contain),
-                ),
-                const SizedBox(height: 4),
-                Text(
-                  item.title,
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  textAlign: TextAlign.center,
-                  style: AppTextStyles.label.copyWith(
-                    color: isActive
-                        ? AppColors.splashTextYellow
-                        : AppColors.splashTextMuted,
-                    fontSize: 9,
+                  child: Image.asset(
+                    item.iconImage,
+                    semanticLabel: item.title,
+                    fit: BoxFit.contain,
                   ),
                 ),
               ],

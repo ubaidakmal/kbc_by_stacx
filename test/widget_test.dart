@@ -63,7 +63,6 @@ void main() {
     );
     expect(find.text(AppConstants.heroDescription), findsOneWidget);
     expect(find.text(AppConstants.heroCta), findsWidgets);
-    expect(find.text('Beef Biryani'), findsWidgets);
 
     await tester.pumpWidget(const SizedBox.shrink());
     await tester.pump(const Duration(seconds: 1));

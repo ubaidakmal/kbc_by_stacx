@@ -286,26 +286,38 @@ class _HeroVisuals extends StatelessWidget {
       (viewModel) => viewModel.heroIntroCompleted,
     );
 
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        HeroFoodSelector(
-          compact: compact,
-          animationStart: introCompleted ? Duration.zero : _iconsStart,
-          iconDuration: introCompleted
-              ? const Duration(milliseconds: 220)
-              : _iconDuration,
-          iconGap: introCompleted ? Duration.zero : _iconGap,
-        ),
-        VerticalGap(compact ? 6 : 10),
-        HeroDishShowcase(
-          compact: compact,
-          animationDelay: introCompleted ? Duration.zero : _dishStart,
-          animationDuration: introCompleted
-              ? const Duration(milliseconds: 320)
-              : _dishDuration,
-        ),
-      ],
+    return SizedBox(
+      width: compact ? 350 : 560,
+      height: compact ? 430 : 560,
+      child: Stack(
+        clipBehavior: Clip.none,
+        alignment: Alignment.centerRight,
+        children: [
+          Positioned(
+            right: 0,
+            top: compact ? 58 : 18,
+            child: HeroDishShowcase(
+              compact: compact,
+              animationDelay: introCompleted ? Duration.zero : _dishStart,
+              animationDuration: introCompleted
+                  ? const Duration(milliseconds: 320)
+                  : _dishDuration,
+            ),
+          ),
+          Positioned(
+            left: compact ? 0 : 8,
+            top: compact ? 12 : 0,
+            child: HeroFoodSelector(
+              compact: compact,
+              animationStart: introCompleted ? Duration.zero : _iconsStart,
+              iconDuration: introCompleted
+                  ? const Duration(milliseconds: 220)
+                  : _iconDuration,
+              iconGap: introCompleted ? Duration.zero : _iconGap,
+            ),
+          ),
+        ],
+      ),
     );
   }
 }

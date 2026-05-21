@@ -26,11 +26,11 @@ class HeroFoodSelector extends StatelessWidget {
   Widget build(BuildContext context) {
     final viewModel = context.watch<HomeViewModel>();
     final visibleIndices = viewModel.visibleFoodIndices;
-    final width = compact ? 310.0 : 390.0;
-    final height = compact ? 160.0 : 230.0;
+    final width = compact ? 118.0 : 168.0;
+    final height = compact ? 330.0 : 500.0;
     final positions = compact
-        ? const [Offset(16, 44), Offset(118, 12), Offset(220, 44)]
-        : const [Offset(22, 96), Offset(150, 22), Offset(280, 96)];
+        ? const [Offset(50, 10), Offset(-32, 132), Offset(50, 254)]
+        : const [Offset(82, 28), Offset(-30, 214), Offset(82, 400)];
 
     return SizedBox(
       width: width,
@@ -64,7 +64,7 @@ class HeroFoodSelector extends StatelessWidget {
                         curve: Curves.easeOutCubic,
                       )
                       .slideY(
-                        begin: -1.1,
+                        begin: -2.8,
                         end: 0,
                         delay: animationStart + (iconGap * slot),
                         duration: iconDuration,
@@ -85,26 +85,38 @@ class _CurvedFoodPathPainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     final path = Path()
-      ..moveTo(size.width * 0.15, size.height * 0.72)
-      ..quadraticBezierTo(
-        size.width * 0.5,
-        size.height * 0.04,
-        size.width * 0.85,
-        size.height * 0.72,
+      ..moveTo(size.width * 0.78, size.height * 0.09)
+      ..cubicTo(
+        -size.width * 0.2,
+        size.height * 0.26,
+        -size.width * 0.2,
+        size.height * 0.74,
+        size.width * 0.78,
+        size.height * 0.91,
       );
 
     final pathMetric = path.computeMetrics().first;
     final dotPaint = Paint()
-      ..color = AppColors.splashTextYellow.withValues(alpha: 0.34)
+      ..color = AppColors.splashTextPrimary.withValues(alpha: 0.32)
       ..style = PaintingStyle.fill;
 
-    for (var i = 0; i <= 24; i++) {
-      final distance = pathMetric.length * (i / 24);
+    for (var i = 0; i <= 32; i++) {
+      final distance = pathMetric.length * (i / 32);
       final tangent = pathMetric.getTangentForOffset(distance);
       if (tangent == null) continue;
-      final pulse = math.sin((i / 24) * math.pi);
-      canvas.drawCircle(tangent.position, 2.2 + pulse * 1.2, dotPaint);
+      final pulse = math.sin((i / 32) * math.pi);
+      canvas.drawCircle(tangent.position, 1.8 + pulse * 0.8, dotPaint);
     }
+
+    final linePaint = Paint()
+      ..color = AppColors.splashTextYellow.withValues(alpha: 0.18)
+      ..strokeWidth = 2
+      ..strokeCap = StrokeCap.round;
+    canvas.drawLine(
+      Offset(size.width * 0.28, size.height * 0.5),
+      Offset(size.width * 0.72, size.height * 0.5),
+      linePaint,
+    );
   }
 
   @override
