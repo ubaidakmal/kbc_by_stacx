@@ -30,6 +30,7 @@ void main() {
     final sizes = <Size>[
       const Size(320, 568),
       const Size(390, 844),
+      const Size(680, 783),
       const Size(768, 1024),
       const Size(1440, 900),
     ];

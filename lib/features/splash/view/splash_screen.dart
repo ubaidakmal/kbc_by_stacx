@@ -38,23 +38,29 @@ class SplashScreen extends StatelessWidget {
           final height = constraints.maxHeight;
           final phoneWidth = width < 430;
           final compactHeight = height < 680;
+          final shortScreen = height < 820;
           final horizontalPadding = width < 420 ? 20.0 : 32.0;
           final contentWidth = math.min(
             width - (horizontalPadding * 2),
             AppConstants.maxContentWidth,
           );
           final sceneHeight =
-              (height * (compactHeight ? 0.36 : (phoneWidth ? 0.34 : 0.48)))
+              (height *
+                      (compactHeight
+                          ? 0.36
+                          : (shortScreen ? 0.38 : (phoneWidth ? 0.34 : 0.48))))
                   .clamp(
-                    compactHeight ? 196.0 : (phoneWidth ? 280.0 : 250.0),
-                    430.0,
+                    compactHeight
+                        ? 196.0
+                        : (shortScreen ? 280.0 : (phoneWidth ? 280.0 : 250.0)),
+                    shortScreen ? 360.0 : 430.0,
                   )
                   .toDouble();
           final sceneWidth = math.min(contentWidth, 520.0);
           final fireSize = (sceneWidth * 0.66).clamp(200.0, 350.0).toDouble();
           final potWidth = (sceneWidth * 0.54).clamp(158.0, 284.0).toDouble();
           final headlineSize = (contentWidth * (compactHeight ? 0.17 : 0.19))
-              .clamp(compactHeight ? 38.0 : 44.0, 82.0)
+              .clamp(compactHeight ? 38.0 : 44.0, shortScreen ? 62.0 : 82.0)
               .toDouble();
 
           return SizedBox(
@@ -73,7 +79,9 @@ class SplashScreen extends StatelessWidget {
                       child: Padding(
                         padding: EdgeInsets.symmetric(
                           horizontal: horizontalPadding,
-                          vertical: compactHeight ? 10 : (phoneWidth ? 24 : 50),
+                          vertical: compactHeight
+                              ? 10
+                              : (shortScreen ? 24 : (phoneWidth ? 24 : 50)),
                         ),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.center,
@@ -92,7 +100,11 @@ class SplashScreen extends StatelessWidget {
                                   duration: _brandDuration,
                                   curve: Curves.easeOutBack,
                                 ),
-                            SizedBox(height: compactHeight ? 12 : 30),
+                            SizedBox(
+                              height: compactHeight
+                                  ? 12
+                                  : (shortScreen ? 18 : 30),
+                            ),
                             _GradientHeadline(fontSize: headlineSize)
                                 .animate()
                                 .fadeIn(
@@ -107,7 +119,11 @@ class SplashScreen extends StatelessWidget {
                                   duration: _headlineDuration,
                                   curve: Curves.easeOutBack,
                                 ),
-                            SizedBox(height: compactHeight ? 8 : 20),
+                            SizedBox(
+                              height: compactHeight
+                                  ? 8
+                                  : (shortScreen ? 12 : 20),
+                            ),
                             ConstrainedBox(
                                   constraints: const BoxConstraints(
                                     maxWidth: 500,
@@ -131,36 +147,48 @@ class SplashScreen extends StatelessWidget {
                                   duration: _subtitleDuration,
                                   curve: Curves.easeOutCubic,
                                 ),
-                            SizedBox(height: compactHeight ? 8 : 12),
-
-                            Align(
-                              alignment: Alignment.center,
-                              child: Column(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  _CookingScene(
-                                    sceneWidth: sceneWidth,
-                                    sceneHeight: sceneHeight,
-                                    fireSize: fireSize,
-                                    potWidth: potWidth,
-                                  ),
-                                  VerticalGap(compactHeight ? 4 : 20),
-                                  const SplashLoadingText()
-                                      .animate()
-                                      .fadeIn(
-                                        delay: _loadingStart,
-                                        duration: _loadingDuration,
-                                        curve: Curves.easeOutCubic,
-                                      )
-                                      .slideY(
-                                        begin: 0.32,
-                                        end: 0,
-                                        delay: _loadingStart,
-                                        duration: _loadingDuration,
-                                        curve: Curves.easeOutCubic,
+                            SizedBox(height: compactHeight ? 8 : 10),
+                            Expanded(
+                              child: Align(
+                                alignment: Alignment.bottomCenter,
+                                child: FittedBox(
+                                  fit: BoxFit.scaleDown,
+                                  child: Column(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      _CookingScene(
+                                        sceneWidth: sceneWidth,
+                                        sceneHeight: sceneHeight,
+                                        fireSize: fireSize,
+                                        potWidth: potWidth,
                                       ),
-                                  VerticalGap(compactHeight ? 4 : 40),
-                                ],
+                                      VerticalGap(
+                                        compactHeight
+                                            ? 4
+                                            : (shortScreen ? 10 : 20),
+                                      ),
+                                      const SplashLoadingText()
+                                          .animate()
+                                          .fadeIn(
+                                            delay: _loadingStart,
+                                            duration: _loadingDuration,
+                                            curve: Curves.easeOutCubic,
+                                          )
+                                          .slideY(
+                                            begin: 0.32,
+                                            end: 0,
+                                            delay: _loadingStart,
+                                            duration: _loadingDuration,
+                                            curve: Curves.easeOutCubic,
+                                          ),
+                                      VerticalGap(
+                                        compactHeight
+                                            ? 4
+                                            : (shortScreen ? 14 : 40),
+                                      ),
+                                    ],
+                                  ),
+                                ),
                               ),
                             ),
                           ],
@@ -353,12 +381,15 @@ class _GradientHeadline extends StatelessWidget {
                     stops: [0.0, 0.54, 1.0],
                   ).createShader(bounds);
                 },
-                child: Text(
-                  'batch',
-                  textAlign: TextAlign.center,
-                  style: baseStyle.copyWith(
-                    color: AppColors.splashTextYellow,
-                    fontSize: fontSize * 0.98,
+                child: Padding(
+                  padding: const EdgeInsets.only(top: 15.0),
+                  child: Text(
+                    'batch',
+                    textAlign: TextAlign.center,
+                    style: baseStyle.copyWith(
+                      color: AppColors.splashTextYellow,
+                      fontSize: fontSize * 0.98,
+                    ),
                   ),
                 ),
               ),
