@@ -16,5 +16,5 @@ class AppConstants {
 
   static const Duration splashDuration = Duration(seconds: 6);
   static const double maxContentWidth = 680;
-  static const double maxHeroContentWidth = 1180;
+  static const double maxHeroContentWidth = 1250;
 }
