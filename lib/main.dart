@@ -28,14 +28,11 @@ class BiryaniHouseApp extends StatelessWidget {
         theme: AppTheme.lightTheme,
         home: Consumer<SplashViewModel>(
           builder: (context, splashViewModel, _) {
-            return AnimatedSwitcher(
-              duration: const Duration(milliseconds: 650),
-              switchInCurve: Curves.easeOutCubic,
-              switchOutCurve: Curves.easeInCubic,
-              child: splashViewModel.isLoading
-                  ? const SplashScreen(key: ValueKey('splash-screen'))
-                  : const HomeScreen(key: ValueKey('home-screen')),
-            );
+            if (splashViewModel.isLoading) {
+              return const SplashScreen();
+            }
+
+            return const HomeScreen();
           },
         ),
       ),

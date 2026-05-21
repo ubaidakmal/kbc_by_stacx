@@ -3,9 +3,9 @@ class AppImages {
 
   static const String cookingPot = 'assets/images/cookingPod.png';
 
-  static const String biryaniImage1 = cookingPot;
-  static const String biryaniImage2 = cookingPot;
-  static const String biryaniImage3 = cookingPot;
-  static const String biryaniImage4 = cookingPot;
-  static const String biryaniImage5 = cookingPot;
+  static const String biryaniImage1 = 'assets/images/biryaniImage1.png';
+  static const String biryaniImage2 = 'assets/images/biryaniImage2.png';
+  static const String biryaniImage3 = 'assets/images/biryaniImage3.png';
+  static const String biryaniImage4 = 'assets/images/biryaniImage4.png';
+  static const String biryaniImage5 = 'assets/images/biryaniImage5.png';
 }

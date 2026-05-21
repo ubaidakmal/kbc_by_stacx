@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:provider/provider.dart';
@@ -36,13 +38,21 @@ class HeroSection extends StatefulWidget {
 }
 
 class _HeroSectionState extends State<HeroSection> {
+  Timer? _introTimer;
+
   @override
   void initState() {
     super.initState();
-    Future<void>.delayed(_heroIntroComplete, () {
+    _introTimer = Timer(_heroIntroComplete, () {
       if (!mounted) return;
       context.read<HomeViewModel>().markHeroIntroCompleted();
     });
+  }
+
+  @override
+  void dispose() {
+    _introTimer?.cancel();
+    super.dispose();
   }
 
   @override

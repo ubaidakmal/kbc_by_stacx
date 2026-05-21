@@ -8,6 +8,7 @@ class SplashViewModel extends ChangeNotifier {
   Timer? _timer;
   bool _isLoading = true;
   double _progress = 0;
+  bool _isDisposed = false;
 
   bool get isLoading => _isLoading;
   double get progress => _progress;
@@ -22,6 +23,11 @@ class SplashViewModel extends ChangeNotifier {
     var currentTick = 0;
 
     _timer = Timer.periodic(tick, (timer) {
+      if (_isDisposed) {
+        timer.cancel();
+        return;
+      }
+
       currentTick++;
       _progress = (currentTick / totalTicks).clamp(0, 1).toDouble();
 
@@ -30,12 +36,15 @@ class SplashViewModel extends ChangeNotifier {
         timer.cancel();
       }
 
-      notifyListeners();
+      if (!_isDisposed) {
+        notifyListeners();
+      }
     });
   }
 
   @override
   void dispose() {
+    _isDisposed = true;
     _timer?.cancel();
     super.dispose();
   }
