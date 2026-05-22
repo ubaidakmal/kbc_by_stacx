@@ -31,6 +31,11 @@ class AppConstants {
       'Built around flavor, speed, and family portions.';
   static const String whyDescription =
       'A premium Karachi comfort-food experience made for bold cravings, easy pickup, and generous meals that bring people together.';
+  static const String cateringEyebrow = 'Catering';
+  static const String cateringHeadline = 'Got a party? We got the biryani.';
+  static const String cateringDescription =
+      'Catering trays for birthdays, office lunches, family events, community gatherings, and weekend get-togethers. Choose chicken, beef, mutton, raita, drinks, and custom portions.';
+  static const String cateringCta = 'Ask for catering quote';
 
   static const Duration splashDuration = Duration(seconds: 6);
   static const double maxContentWidth = 680;

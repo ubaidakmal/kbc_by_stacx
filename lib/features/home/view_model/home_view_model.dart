@@ -49,6 +49,20 @@ class WhyStep {
   final String description;
 }
 
+class CateringMetric {
+  const CateringMetric({
+    required this.value,
+    required this.label,
+    this.suffix = '',
+    this.isTextMetric = false,
+  });
+
+  final int value;
+  final String label;
+  final String suffix;
+  final bool isTextMetric;
+}
+
 class HomeViewModel extends ChangeNotifier {
   static const int visibleFoodCount = 3;
 
@@ -211,6 +225,23 @@ class HomeViewModel extends ChangeNotifier {
       title: 'Catering Friendly',
       description:
           'Trays and packages for birthdays, office lunches, and events.',
+    ),
+  ];
+
+  final List<CateringMetric> cateringMetrics = const [
+    CateringMetric(value: 20, suffix: '+', label: 'Guests'),
+    CateringMetric(value: 3, label: 'Tray Sizes'),
+    CateringMetric(
+      value: 0,
+      label: 'Pickup',
+      suffix: 'Fast',
+      isTextMetric: true,
+    ),
+    CateringMetric(
+      value: 0,
+      label: 'Quotes',
+      suffix: 'Custom',
+      isTextMetric: true,
     ),
   ];
 

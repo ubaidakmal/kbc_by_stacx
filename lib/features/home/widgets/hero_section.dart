@@ -11,6 +11,7 @@ import '../../../core/widgets/app_button.dart';
 import '../../../core/widgets/app_spacing.dart';
 import '../view_model/home_view_model.dart';
 import 'about_section.dart';
+import 'catering_section.dart';
 import 'hero_app_bar.dart';
 import 'hero_background.dart';
 import 'hero_dish_showcase.dart';
@@ -48,11 +49,13 @@ class _HeroSectionState extends State<HeroSection> {
   final _aboutKey = GlobalKey();
   final _menuKey = GlobalKey();
   final _whyKey = GlobalKey();
+  final _cateringKey = GlobalKey();
   final _heroDishKey = GlobalKey();
   final _aboutDishKey = GlobalKey();
   double _dishTravelProgress = 0;
   double _menuRevealProgress = 0;
   double _whyRevealProgress = 0;
+  double _cateringRevealProgress = 0;
   double _lastScrollOffset = 0;
 
   @override
@@ -82,11 +85,13 @@ class _HeroSectionState extends State<HeroSection> {
         .toDouble();
     final nextMenuProgress = _calculateMenuProgress(viewportHeight);
     final nextWhyProgress = _calculateWhyProgress(viewportHeight);
+    final nextCateringProgress = _calculateCateringProgress(viewportHeight);
     final nextScrollOffset = _scrollController.offset;
 
     if ((nextProgress - _dishTravelProgress).abs() < 0.01 &&
         (nextMenuProgress - _menuRevealProgress).abs() < 0.01 &&
         (nextWhyProgress - _whyRevealProgress).abs() < 0.01 &&
+        (nextCateringProgress - _cateringRevealProgress).abs() < 0.01 &&
         (nextScrollOffset - _lastScrollOffset).abs() < 0.5) {
       return;
     }
@@ -95,6 +100,7 @@ class _HeroSectionState extends State<HeroSection> {
       _dishTravelProgress = nextProgress;
       _menuRevealProgress = nextMenuProgress;
       _whyRevealProgress = nextWhyProgress;
+      _cateringRevealProgress = nextCateringProgress;
       _lastScrollOffset = nextScrollOffset;
     });
   }
@@ -107,6 +113,21 @@ class _HeroSectionState extends State<HeroSection> {
 
     final menuTop = menuBox.localToGlobal(Offset.zero, ancestor: rootBox).dy;
     return ((viewportHeight - menuTop) / (viewportHeight * 0.92))
+        .clamp(0.0, 1.0)
+        .toDouble();
+  }
+
+  double _calculateCateringProgress(double viewportHeight) {
+    final rootBox = _rootKey.currentContext?.findRenderObject() as RenderBox?;
+    final cateringBox =
+        _cateringKey.currentContext?.findRenderObject() as RenderBox?;
+
+    if (rootBox == null || cateringBox == null) return _cateringRevealProgress;
+
+    final cateringTop = cateringBox
+        .localToGlobal(Offset.zero, ancestor: rootBox)
+        .dy;
+    return ((viewportHeight - cateringTop) / (viewportHeight * 0.86))
         .clamp(0.0, 1.0)
         .toDouble();
   }
@@ -155,6 +176,18 @@ class _HeroSectionState extends State<HeroSection> {
     );
   }
 
+  void _scrollToCatering() {
+    final context = _cateringKey.currentContext;
+    if (context == null) return;
+
+    Scrollable.ensureVisible(
+      context,
+      duration: const Duration(milliseconds: 1000),
+      curve: Curves.easeInOutCubic,
+      alignment: 0.1,
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return HeroBackground(
@@ -197,6 +230,7 @@ class _HeroSectionState extends State<HeroSection> {
                                       onHomeTap: _scrollToTop,
                                       onAboutTap: _scrollToAbout,
                                       onMenuTap: _scrollToMenu,
+                                      onCateringTap: _scrollToCatering,
                                     ),
                                     if (isMobile)
                                       _MobileHeroLayout(
@@ -225,6 +259,10 @@ class _HeroSectionState extends State<HeroSection> {
                             WhyCustomersSection(
                               key: _whyKey,
                               revealProgress: _whyRevealProgress,
+                            ),
+                            CateringSection(
+                              key: _cateringKey,
+                              revealProgress: _cateringRevealProgress,
                             ),
                           ],
                         ),

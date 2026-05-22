@@ -13,6 +13,7 @@ class HeroAppBar extends StatelessWidget {
     required this.onHomeTap,
     required this.onAboutTap,
     required this.onMenuTap,
+    required this.onCateringTap,
     super.key,
   });
 
@@ -21,6 +22,7 @@ class HeroAppBar extends StatelessWidget {
   final VoidCallback onHomeTap;
   final VoidCallback onAboutTap;
   final VoidCallback onMenuTap;
+  final VoidCallback onCateringTap;
 
   @override
   Widget build(BuildContext context) {
@@ -107,7 +109,7 @@ class HeroAppBar extends StatelessWidget {
                           _NavItem('Home', onTap: onHomeTap),
                           _NavItem('About', onTap: onAboutTap),
                           _NavItem('Menu', onTap: onMenuTap),
-                          const _NavItem('Catering'),
+                          _NavItem('Catering', onTap: onCateringTap),
                           const _NavItem('Contact'),
                           const SizedBox(width: 18),
                           _IconBubble(icon: Icons.search_rounded),
