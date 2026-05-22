@@ -18,6 +18,7 @@ import 'hero_dish_showcase.dart';
 import 'hero_food_selector.dart';
 import 'menu_section.dart';
 import 'reviews_section.dart';
+import 'visit_section.dart';
 import 'why_customers_section.dart';
 
 const _appBarStart = Duration.zero;
@@ -52,6 +53,7 @@ class _HeroSectionState extends State<HeroSection> {
   final _whyKey = GlobalKey();
   final _cateringKey = GlobalKey();
   final _reviewsKey = GlobalKey();
+  final _visitKey = GlobalKey();
   final _heroDishKey = GlobalKey();
   final _aboutDishKey = GlobalKey();
   double _dishTravelProgress = 0;
@@ -59,6 +61,7 @@ class _HeroSectionState extends State<HeroSection> {
   double _whyRevealProgress = 0;
   double _cateringRevealProgress = 0;
   double _reviewsRevealProgress = 0;
+  double _visitRevealProgress = 0;
   double _lastScrollOffset = 0;
 
   @override
@@ -90,6 +93,7 @@ class _HeroSectionState extends State<HeroSection> {
     final nextWhyProgress = _calculateWhyProgress(viewportHeight);
     final nextCateringProgress = _calculateCateringProgress(viewportHeight);
     final nextReviewsProgress = _calculateReviewsProgress(viewportHeight);
+    final nextVisitProgress = _calculateVisitProgress(viewportHeight);
     final nextScrollOffset = _scrollController.offset;
 
     if ((nextProgress - _dishTravelProgress).abs() < 0.01 &&
@@ -97,6 +101,7 @@ class _HeroSectionState extends State<HeroSection> {
         (nextWhyProgress - _whyRevealProgress).abs() < 0.01 &&
         (nextCateringProgress - _cateringRevealProgress).abs() < 0.01 &&
         (nextReviewsProgress - _reviewsRevealProgress).abs() < 0.01 &&
+        (nextVisitProgress - _visitRevealProgress).abs() < 0.01 &&
         (nextScrollOffset - _lastScrollOffset).abs() < 0.5) {
       return;
     }
@@ -107,6 +112,7 @@ class _HeroSectionState extends State<HeroSection> {
       _whyRevealProgress = nextWhyProgress;
       _cateringRevealProgress = nextCateringProgress;
       _reviewsRevealProgress = nextReviewsProgress;
+      _visitRevealProgress = nextVisitProgress;
       _lastScrollOffset = nextScrollOffset;
     });
   }
@@ -119,6 +125,18 @@ class _HeroSectionState extends State<HeroSection> {
 
     final menuTop = menuBox.localToGlobal(Offset.zero, ancestor: rootBox).dy;
     return ((viewportHeight - menuTop) / (viewportHeight * 0.92))
+        .clamp(0.0, 1.0)
+        .toDouble();
+  }
+
+  double _calculateVisitProgress(double viewportHeight) {
+    final rootBox = _rootKey.currentContext?.findRenderObject() as RenderBox?;
+    final visitBox = _visitKey.currentContext?.findRenderObject() as RenderBox?;
+
+    if (rootBox == null || visitBox == null) return _visitRevealProgress;
+
+    final visitTop = visitBox.localToGlobal(Offset.zero, ancestor: rootBox).dy;
+    return ((viewportHeight - visitTop) / (viewportHeight * 0.86))
         .clamp(0.0, 1.0)
         .toDouble();
   }
@@ -209,6 +227,18 @@ class _HeroSectionState extends State<HeroSection> {
     );
   }
 
+  void _scrollToVisit() {
+    final context = _visitKey.currentContext;
+    if (context == null) return;
+
+    Scrollable.ensureVisible(
+      context,
+      duration: const Duration(milliseconds: 1000),
+      curve: Curves.easeInOutCubic,
+      alignment: 0.08,
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return HeroBackground(
@@ -252,6 +282,7 @@ class _HeroSectionState extends State<HeroSection> {
                                       onAboutTap: _scrollToAbout,
                                       onMenuTap: _scrollToMenu,
                                       onCateringTap: _scrollToCatering,
+                                      onContactTap: _scrollToVisit,
                                     ),
                                     if (isMobile)
                                       _MobileHeroLayout(
@@ -288,6 +319,10 @@ class _HeroSectionState extends State<HeroSection> {
                             ReviewsSection(
                               key: _reviewsKey,
                               revealProgress: _reviewsRevealProgress,
+                            ),
+                            VisitSection(
+                              key: _visitKey,
+                              revealProgress: _visitRevealProgress,
                             ),
                           ],
                         ),

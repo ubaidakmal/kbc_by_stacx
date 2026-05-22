@@ -40,6 +40,17 @@ class AppConstants {
   static const String reviewsHeadline = 'Google-style proof that sells.';
   static const String reviewsDescription =
       'Clean review cards help build trust before the customer taps order.';
+  static const String visitEyebrow = 'Visit Us';
+  static const String visitHeadline = 'Pull up for the next hot plate.';
+  static const String visitRestaurantName =
+      'Karachi Biryani Center (Meadows Place)';
+  static const String visitAddress =
+      '11611 West Airport Boulevard, Meadows Place, TX, USA';
+  static const String visitPhone = '(832) 933-1183';
+  static const String visitHoursLabel = 'Open today';
+  static const String visitHours = '11:00 am - 10:00 pm';
+  static const String visitCta = 'Contact Us';
+  static const String visitDirections = 'Get directions';
 
   static const Duration splashDuration = Duration(seconds: 6);
   static const double maxContentWidth = 680;
