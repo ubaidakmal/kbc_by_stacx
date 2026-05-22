@@ -1,4 +1,5 @@
 import 'dart:math' as math;
+import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -587,110 +588,150 @@ class _MenuCardShell extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return DecoratedBox(
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(18),
-        gradient: LinearGradient(
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-          colors: [
-            AppColors.white.withValues(alpha: 0.14),
-            AppColors.splashMaroon.withValues(alpha: 0.72),
-            AppColors.splashDeepRed.withValues(alpha: 0.88),
-          ],
-        ),
-        border: Border.all(color: AppColors.white.withValues(alpha: 0.12)),
-        boxShadow: [
-          BoxShadow(
-            color: AppColors.blackOverlay.withValues(alpha: 0.24),
-            blurRadius: 30,
-            offset: const Offset(0, 18),
-          ),
-          BoxShadow(
-            color: AppColors.splashWarmOrangeGlow.withValues(alpha: 0.1),
-            blurRadius: 44,
-            spreadRadius: 1,
-          ),
-        ],
-      ),
-      child: Padding(
-        padding: EdgeInsets.fromLTRB(16, topPadding, 16, 16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              item.title,
-              maxLines: 2,
-              overflow: TextOverflow.ellipsis,
-              style: AppTextStyles.headingMedium.copyWith(
-                color: AppColors.splashTextPrimary,
-                fontSize: 18,
-                fontWeight: FontWeight.w900,
-                height: 1.12,
-              ),
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(18),
+      child: BackdropFilter(
+        filter: ImageFilter.blur(sigmaX: 14, sigmaY: 14),
+        child: DecoratedBox(
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(18),
+            gradient: LinearGradient(
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+              stops: const [0, 0.42, 1],
+              colors: [
+                AppColors.white.withValues(alpha: 0.18),
+                AppColors.splashMaroon.withValues(alpha: 0.52),
+                AppColors.splashDeepRed.withValues(alpha: 0.7),
+              ],
             ),
-            const VerticalGap(9),
-            Expanded(
-              child: Text(
-                item.description,
-                maxLines: 4,
-                overflow: TextOverflow.ellipsis,
-                style: AppTextStyles.bodySmall.copyWith(
-                  color: AppColors.splashTextMuted,
-                  fontSize: 12,
-                  height: 1.35,
+            border: Border.all(
+              color: AppColors.splashTextPrimary.withValues(alpha: 0.18),
+            ),
+            boxShadow: [
+              BoxShadow(
+                color: AppColors.blackOverlay.withValues(alpha: 0.24),
+                blurRadius: 30,
+                offset: const Offset(0, 18),
+              ),
+              BoxShadow(
+                color: AppColors.splashWarmOrangeGlow.withValues(alpha: 0.08),
+                blurRadius: 42,
+                spreadRadius: 1,
+              ),
+            ],
+          ),
+          child: Stack(
+            children: [
+              Positioned.fill(
+                child: DecoratedBox(
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      begin: Alignment.topLeft,
+                      end: Alignment.bottomRight,
+                      colors: [
+                        AppColors.white.withValues(alpha: 0.14),
+                        AppColors.white.withValues(alpha: 0.03),
+                        AppColors.blackOverlay.withValues(alpha: 0.12),
+                      ],
+                    ),
+                  ),
                 ),
               ),
-            ),
-            const VerticalGap(12),
-            Row(
-              children: [
-                Expanded(
-                  child: DecoratedBox(
-                    decoration: BoxDecoration(
-                      color: AppColors.splashTextYellow,
-                      borderRadius: BorderRadius.circular(999),
-                      boxShadow: [
-                        BoxShadow(
-                          color: AppColors.splashTextYellow.withValues(
-                            alpha: 0.24,
+              Positioned(
+                left: 12,
+                top: 10,
+                width: 74,
+                height: 1,
+                child: DecoratedBox(
+                  decoration: BoxDecoration(
+                    color: AppColors.white.withValues(alpha: 0.32),
+                    borderRadius: BorderRadius.circular(999),
+                  ),
+                ),
+              ),
+              Padding(
+                padding: EdgeInsets.fromLTRB(16, topPadding, 16, 16),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      item.title,
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                      style: AppTextStyles.headingMedium.copyWith(
+                        color: AppColors.splashTextPrimary,
+                        fontSize: 18,
+                        fontWeight: FontWeight.w900,
+                        height: 1.12,
+                      ),
+                    ),
+                    const VerticalGap(9),
+                    Expanded(
+                      child: Text(
+                        item.description,
+                        maxLines: 4,
+                        overflow: TextOverflow.ellipsis,
+                        style: AppTextStyles.bodySmall.copyWith(
+                          color: AppColors.splashTextMuted,
+                          fontSize: 12,
+                          height: 1.35,
+                        ),
+                      ),
+                    ),
+                    const VerticalGap(12),
+                    Row(
+                      children: [
+                        Expanded(
+                          child: DecoratedBox(
+                            decoration: BoxDecoration(
+                              color: AppColors.splashTextYellow,
+                              borderRadius: BorderRadius.circular(999),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: AppColors.splashTextYellow.withValues(
+                                    alpha: 0.22,
+                                  ),
+                                  blurRadius: 16,
+                                  offset: const Offset(0, 8),
+                                ),
+                              ],
+                            ),
+                            child: Padding(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 13,
+                                vertical: 10,
+                              ),
+                              child: Text(
+                                'Order Now',
+                                textAlign: TextAlign.center,
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                                style: AppTextStyles.button.copyWith(
+                                  color: AppColors.splashDeepRed,
+                                  fontSize: 12,
+                                ),
+                              ),
+                            ),
                           ),
-                          blurRadius: 16,
-                          offset: const Offset(0, 8),
+                        ),
+                        const SizedBox(width: 10),
+                        Text(
+                          '\$${item.price}',
+                          style: AppTextStyles.headingMedium.copyWith(
+                            color: AppColors.splashTextYellow,
+                            fontSize: 18,
+                            fontWeight: FontWeight.w900,
+                            height: 1,
+                          ),
                         ),
                       ],
                     ),
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 13,
-                        vertical: 10,
-                      ),
-                      child: Text(
-                        'Order Now',
-                        textAlign: TextAlign.center,
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                        style: AppTextStyles.button.copyWith(
-                          color: AppColors.splashDeepRed,
-                          fontSize: 12,
-                        ),
-                      ),
-                    ),
-                  ),
+                  ],
                 ),
-                const SizedBox(width: 10),
-                Text(
-                  '\$${item.price}',
-                  style: AppTextStyles.headingMedium.copyWith(
-                    color: AppColors.splashTextYellow,
-                    fontSize: 18,
-                    fontWeight: FontWeight.w900,
-                    height: 1,
-                  ),
-                ),
-              ],
-            ),
-          ],
+              ),
+            ],
+          ),
         ),
       ),
     );
