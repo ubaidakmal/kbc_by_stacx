@@ -16,6 +16,32 @@ class HeroFoodItem {
   final String dishImage;
 }
 
+class MenuCategory {
+  const MenuCategory({
+    required this.title,
+    required this.description,
+    required this.items,
+  });
+
+  final String title;
+  final String description;
+  final List<MenuItem> items;
+}
+
+class MenuItem {
+  const MenuItem({
+    required this.title,
+    required this.description,
+    required this.price,
+    required this.image,
+  });
+
+  final String title;
+  final String description;
+  final String price;
+  final String image;
+}
+
 class HomeViewModel extends ChangeNotifier {
   static const int visibleFoodCount = 3;
 
@@ -52,13 +78,118 @@ class HomeViewModel extends ChangeNotifier {
     ),
   ];
 
+  final List<MenuCategory> menuCategories = const [
+    MenuCategory(
+      title: 'All',
+      description:
+          'A curated taste of Karachi biryani, paratha rolls, and family-style comfort plates.',
+      items: [
+        MenuItem(
+          title: 'Chicken Daighi Biryani',
+          price: '13.99',
+          image: AppImages.biryaniImage1,
+          description:
+              'Succulent chicken and seasoned potatoes layered with onions, tomatoes, cilantro, mint, yogurt, bold spices, and top-quality basmati rice.',
+        ),
+        MenuItem(
+          title: 'Shahi Veal Biryani',
+          price: '16.99',
+          image: AppImages.biryaniImage2,
+          description:
+              'Delicately spiced veal layered with mint, cilantro, yogurt, tomatoes, onions, and long-grain basmati rice.',
+        ),
+        MenuItem(
+          title: 'Garlic Mayo Roll',
+          price: '12.99',
+          image: AppImages.biryaniImage3,
+          description:
+              'Tender chicken tossed in creamy mayo and garlic sauce, wrapped in a crispy paratha for a rich Karachi-style bite.',
+        ),
+        MenuItem(
+          title: 'Beef Bihari Roll',
+          price: '14.99',
+          image: AppImages.biryaniImage4,
+          description:
+              'Marinated beef wrapped in flaky paratha with onions, cilantro, and tangy mint-plum chutney.',
+        ),
+        MenuItem(
+          title: 'Family Biryani Tray',
+          price: '34.99',
+          image: AppImages.biryaniImage5,
+          description:
+              'A generous tray of signature biryani layered for sharing with family-style warmth.',
+        ),
+      ],
+    ),
+    MenuCategory(
+      title: 'Traditional Daighi Biryanis',
+      description:
+          'Authentic Karachi street-style raseeli daighi/degi biryani that melts in the mouth. Fresh, juicy and mouthwatering.',
+      items: [
+        MenuItem(
+          title: 'Chicken Daighi Biryani',
+          price: '13.99',
+          image: AppImages.biryaniImage1,
+          description:
+              'Succulent chicken and seasoned potatoes layered with onions, tomatoes, cilantro, mint, yogurt, bold spices, and top-quality basmati rice.',
+        ),
+        MenuItem(
+          title: 'Shahi Veal Biryani',
+          price: '16.99',
+          image: AppImages.biryaniImage2,
+          description:
+              'Delicately spiced veal layered with mint, cilantro, yogurt, tomatoes, onions, and long-grain basmati rice.',
+        ),
+      ],
+    ),
+    MenuCategory(
+      title: 'BBQ Platters & Paratha Rolls',
+      description:
+          'Authentic Karachi street-style paratha rolls packed with fresh, juicy fillings wrapped in flaky golden paratha. Saucy, flavorful, and irresistibly mouthwatering.',
+      items: [
+        MenuItem(
+          title: 'Garlic Mayo Roll',
+          price: '12.99',
+          image: AppImages.biryaniImage3,
+          description:
+              'Tender chicken tossed in creamy mayo and garlic sauce, wrapped in a crispy paratha for a rich Karachi-style bite.',
+        ),
+        MenuItem(
+          title: 'Beef Bihari Roll',
+          price: '14.99',
+          image: AppImages.biryaniImage4,
+          description:
+              'Marinated beef wrapped in flaky paratha with onions, cilantro, and tangy mint-plum chutney.',
+        ),
+      ],
+    ),
+    MenuCategory(
+      title: 'Family Favorites',
+      description:
+          'Big-flavor Karachi plates for gatherings, cravings, and comfort-food moments.',
+      items: [
+        MenuItem(
+          title: 'Family Biryani Tray',
+          price: '34.99',
+          image: AppImages.biryaniImage5,
+          description:
+              'A generous tray of signature biryani layered for sharing with family-style warmth.',
+        ),
+      ],
+    ),
+  ];
+
   int _selectedFoodIndex = visibleFoodCount - 1;
   int _visibleStartIndex = 0;
+  int _selectedMenuCategoryIndex = 0;
   bool _heroIntroCompleted = false;
 
   int get selectedFoodIndex => _selectedFoodIndex;
+  int get selectedMenuCategoryIndex => _selectedMenuCategoryIndex;
   bool get heroIntroCompleted => _heroIntroCompleted;
   HeroFoodItem get selectedDish => foodItems[_selectedFoodIndex];
+  MenuCategory get selectedMenuCategory =>
+      menuCategories[_selectedMenuCategoryIndex];
 
   List<int> get visibleFoodIndices {
     return List.generate(
@@ -79,6 +210,17 @@ class HomeViewModel extends ChangeNotifier {
   void markHeroIntroCompleted() {
     if (_heroIntroCompleted) return;
     _heroIntroCompleted = true;
+    notifyListeners();
+  }
+
+  void selectMenuCategory(int index) {
+    if (index == _selectedMenuCategoryIndex ||
+        index < 0 ||
+        index >= menuCategories.length) {
+      return;
+    }
+
+    _selectedMenuCategoryIndex = index;
     notifyListeners();
   }
 }

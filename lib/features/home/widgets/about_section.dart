@@ -12,11 +12,13 @@ class AboutSection extends StatelessWidget {
   const AboutSection({
     required this.dishTargetKey,
     required this.revealProgress,
+    required this.exitProgress,
     super.key,
   });
 
   final GlobalKey dishTargetKey;
   final double revealProgress;
+  final double exitProgress;
 
   @override
   Widget build(BuildContext context) {
@@ -26,11 +28,12 @@ class AboutSection extends StatelessWidget {
         final progress = Curves.easeOutCubic.transform(
           revealProgress.clamp(0, 1),
         );
+        final exit = Curves.easeInCubic.transform(exitProgress.clamp(0, 1));
 
         return Transform.translate(
-          offset: Offset(0, (1 - progress) * 42),
+          offset: Offset(0, ((1 - progress) * 42) - (exit * 96)),
           child: Opacity(
-            opacity: progress.clamp(0.08, 1),
+            opacity: (progress.clamp(0.08, 1) * (1 - exit)).clamp(0.0, 1.0),
             child: Padding(
               padding: EdgeInsets.symmetric(
                 vertical: compact ? 64 : 96,

@@ -15,6 +15,7 @@ import 'hero_app_bar.dart';
 import 'hero_background.dart';
 import 'hero_dish_showcase.dart';
 import 'hero_food_selector.dart';
+import 'menu_section.dart';
 
 const _appBarStart = Duration.zero;
 const _appBarDuration = Duration(milliseconds: 500);
@@ -44,9 +45,11 @@ class _HeroSectionState extends State<HeroSection> {
   final _rootKey = GlobalKey();
   final _heroKey = GlobalKey();
   final _aboutKey = GlobalKey();
+  final _menuKey = GlobalKey();
   final _heroDishKey = GlobalKey();
   final _aboutDishKey = GlobalKey();
   double _dishTravelProgress = 0;
+  double _menuRevealProgress = 0;
   double _lastScrollOffset = 0;
 
   @override
@@ -74,17 +77,32 @@ class _HeroSectionState extends State<HeroSection> {
     final nextProgress = (_scrollController.offset / (viewportHeight * 0.72))
         .clamp(0.0, 1.0)
         .toDouble();
+    final nextMenuProgress = _calculateMenuProgress(viewportHeight);
     final nextScrollOffset = _scrollController.offset;
 
     if ((nextProgress - _dishTravelProgress).abs() < 0.01 &&
+        (nextMenuProgress - _menuRevealProgress).abs() < 0.01 &&
         (nextScrollOffset - _lastScrollOffset).abs() < 0.5) {
       return;
     }
 
     setState(() {
       _dishTravelProgress = nextProgress;
+      _menuRevealProgress = nextMenuProgress;
       _lastScrollOffset = nextScrollOffset;
     });
+  }
+
+  double _calculateMenuProgress(double viewportHeight) {
+    final rootBox = _rootKey.currentContext?.findRenderObject() as RenderBox?;
+    final menuBox = _menuKey.currentContext?.findRenderObject() as RenderBox?;
+
+    if (rootBox == null || menuBox == null) return _menuRevealProgress;
+
+    final menuTop = menuBox.localToGlobal(Offset.zero, ancestor: rootBox).dy;
+    return ((viewportHeight - menuTop) / (viewportHeight * 0.92))
+        .clamp(0.0, 1.0)
+        .toDouble();
   }
 
   void _scrollToTop() {
@@ -104,6 +122,18 @@ class _HeroSectionState extends State<HeroSection> {
       duration: const Duration(milliseconds: 900),
       curve: Curves.easeInOutCubic,
       alignment: 0.06,
+    );
+  }
+
+  void _scrollToMenu() {
+    final context = _menuKey.currentContext;
+    if (context == null) return;
+
+    Scrollable.ensureVisible(
+      context,
+      duration: const Duration(milliseconds: 1000),
+      curve: Curves.easeInOutCubic,
+      alignment: 0.12,
     );
   }
 
@@ -148,6 +178,7 @@ class _HeroSectionState extends State<HeroSection> {
                                       animationDuration: _appBarDuration,
                                       onHomeTap: _scrollToTop,
                                       onAboutTap: _scrollToAbout,
+                                      onMenuTap: _scrollToMenu,
                                     ),
                                     if (isMobile)
                                       _MobileHeroLayout(
@@ -167,6 +198,11 @@ class _HeroSectionState extends State<HeroSection> {
                               key: _aboutKey,
                               dishTargetKey: _aboutDishKey,
                               revealProgress: _dishTravelProgress,
+                              exitProgress: _menuRevealProgress,
+                            ),
+                            MenuSection(
+                              key: _menuKey,
+                              revealProgress: _menuRevealProgress,
                             ),
                           ],
                         ),

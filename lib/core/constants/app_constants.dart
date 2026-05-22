@@ -16,6 +16,16 @@ class AppConstants {
   static const String aboutHeadline = 'Welcome to Karachi Biryani Center';
   static const String aboutDescription =
       'At Karachi Biryani Center, we bring the bold, nostalgic flavors of Karachi to the heart of Houston.\n\nRooted in tradition and crafted with passion, every plate celebrates authentic spices, family recipes, and the love of true daighi-style cooking. From our signature biryani to smoky paratha rolls, we serve comfort, culture, and flavor — one bite at a time.';
+  static const String menuEyebrow = 'Our Menu';
+  static const String menuHeadline = 'Our Popular Menu';
+  static const String menuDescription =
+      'Authentic Karachi street-style favorites with daighi biryani, smoky rolls, and bold Pakistani flavor in every bite.';
+  static const String menuDaighiTitle = 'Traditional Daighi Biryanis';
+  static const String menuDaighiDescription =
+      'Authentic Karachi street-style raseeli daighi/degi biryani that melts in the mouth. Fresh, juicy and mouthwatering.';
+  static const String menuRollsTitle = 'BBQ Platters & Paratha Rolls';
+  static const String menuRollsDescription =
+      'Authentic Karachi street-style paratha rolls packed with fresh, juicy fillings wrapped in flaky golden paratha. Saucy, flavorful, and irresistibly mouthwatering.';
 
   static const Duration splashDuration = Duration(seconds: 6);
   static const double maxContentWidth = 680;

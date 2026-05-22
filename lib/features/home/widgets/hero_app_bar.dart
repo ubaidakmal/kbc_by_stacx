@@ -12,6 +12,7 @@ class HeroAppBar extends StatelessWidget {
     required this.animationDuration,
     required this.onHomeTap,
     required this.onAboutTap,
+    required this.onMenuTap,
     super.key,
   });
 
@@ -19,6 +20,7 @@ class HeroAppBar extends StatelessWidget {
   final Duration animationDuration;
   final VoidCallback onHomeTap;
   final VoidCallback onAboutTap;
+  final VoidCallback onMenuTap;
 
   @override
   Widget build(BuildContext context) {
@@ -104,7 +106,7 @@ class HeroAppBar extends StatelessWidget {
                           const SizedBox(width: 30),
                           _NavItem('Home', onTap: onHomeTap),
                           _NavItem('About', onTap: onAboutTap),
-                          const _NavItem('Menu'),
+                          _NavItem('Menu', onTap: onMenuTap),
                           const _NavItem('Catering'),
                           const _NavItem('Contact'),
                           const SizedBox(width: 18),
@@ -115,7 +117,11 @@ class HeroAppBar extends StatelessWidget {
                           const SizedBox(width: 14),
                           _OrderPill(compact: true),
                           const SizedBox(width: 8),
-                          _IconBubble(icon: Icons.menu_rounded, compact: true),
+                          _IconBubble(
+                            icon: Icons.menu_rounded,
+                            compact: true,
+                            onTap: onMenuTap,
+                          ),
                         ],
                       ],
                     ),
@@ -170,14 +176,15 @@ class _NavItem extends StatelessWidget {
 }
 
 class _IconBubble extends StatelessWidget {
-  const _IconBubble({required this.icon, this.compact = false});
+  const _IconBubble({required this.icon, this.compact = false, this.onTap});
 
   final IconData icon;
   final bool compact;
+  final VoidCallback? onTap;
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    final bubble = Container(
       width: 42,
       height: compact ? 38 : 42,
       decoration: BoxDecoration(
@@ -190,6 +197,12 @@ class _IconBubble extends StatelessWidget {
         color: AppColors.splashTextPrimary,
         size: compact ? 18 : 20,
       ),
+    );
+
+    if (onTap == null) return bubble;
+    return MouseRegion(
+      cursor: SystemMouseCursors.click,
+      child: GestureDetector(onTap: onTap, child: bubble),
     );
   }
 }
