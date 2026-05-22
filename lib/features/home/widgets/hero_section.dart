@@ -10,6 +10,7 @@ import '../../../core/constants/app_text_styles.dart';
 import '../../../core/widgets/app_button.dart';
 import '../../../core/widgets/app_spacing.dart';
 import '../view_model/home_view_model.dart';
+import 'about_section.dart';
 import 'hero_app_bar.dart';
 import 'hero_background.dart';
 import 'hero_dish_showcase.dart';
@@ -39,6 +40,14 @@ class HeroSection extends StatefulWidget {
 
 class _HeroSectionState extends State<HeroSection> {
   Timer? _introTimer;
+  final _scrollController = ScrollController();
+  final _rootKey = GlobalKey();
+  final _heroKey = GlobalKey();
+  final _aboutKey = GlobalKey();
+  final _heroDishKey = GlobalKey();
+  final _aboutDishKey = GlobalKey();
+  double _dishTravelProgress = 0;
+  double _lastScrollOffset = 0;
 
   @override
   void initState() {
@@ -47,12 +56,55 @@ class _HeroSectionState extends State<HeroSection> {
       if (!mounted) return;
       context.read<HomeViewModel>().markHeroIntroCompleted();
     });
+    _scrollController.addListener(_handleScroll);
   }
 
   @override
   void dispose() {
     _introTimer?.cancel();
+    _scrollController
+      ..removeListener(_handleScroll)
+      ..dispose();
     super.dispose();
+  }
+
+  void _handleScroll() {
+    if (!_scrollController.hasClients) return;
+    final viewportHeight = MediaQuery.sizeOf(context).height;
+    final nextProgress = (_scrollController.offset / (viewportHeight * 0.72))
+        .clamp(0.0, 1.0)
+        .toDouble();
+    final nextScrollOffset = _scrollController.offset;
+
+    if ((nextProgress - _dishTravelProgress).abs() < 0.01 &&
+        (nextScrollOffset - _lastScrollOffset).abs() < 0.5) {
+      return;
+    }
+
+    setState(() {
+      _dishTravelProgress = nextProgress;
+      _lastScrollOffset = nextScrollOffset;
+    });
+  }
+
+  void _scrollToTop() {
+    _scrollController.animateTo(
+      0,
+      duration: const Duration(milliseconds: 850),
+      curve: Curves.easeInOutCubic,
+    );
+  }
+
+  void _scrollToAbout() {
+    final context = _aboutKey.currentContext;
+    if (context == null) return;
+
+    Scrollable.ensureVisible(
+      context,
+      duration: const Duration(milliseconds: 900),
+      curve: Curves.easeInOutCubic,
+      alignment: 0.06,
+    );
   }
 
   @override
@@ -69,35 +121,67 @@ class _HeroSectionState extends State<HeroSection> {
             AppConstants.maxHeroContentWidth,
           );
 
-          return SingleChildScrollView(
-            child: ConstrainedBox(
-              constraints: BoxConstraints(minHeight: height),
-              child: SafeArea(
-                child: Center(
-                  child: SizedBox(
-                    width: contentWidth,
-                    child: Padding(
-                      padding: EdgeInsets.symmetric(
-                        horizontal: isMobile ? 0 : 8,
-                        vertical: isMobile ? 4 : 10,
-                      ),
-                      child: Column(
-                        children: [
-                          const HeroAppBar(
-                            animationDelay: _appBarStart,
-                            animationDuration: _appBarDuration,
-                          ),
-                          if (isMobile)
-                            const _MobileHeroLayout()
-                          else
-                            const _DesktopHeroLayout(),
-                        ],
+          return Stack(
+            key: _rootKey,
+            children: [
+              SingleChildScrollView(
+                controller: _scrollController,
+                child: SafeArea(
+                  child: Center(
+                    child: SizedBox(
+                      width: contentWidth,
+                      child: Padding(
+                        padding: EdgeInsets.symmetric(
+                          horizontal: isMobile ? 0 : 8,
+                          vertical: isMobile ? 4 : 10,
+                        ),
+                        child: Column(
+                          children: [
+                            SizedBox(
+                              key: _heroKey,
+                              child: ConstrainedBox(
+                                constraints: BoxConstraints(minHeight: height),
+                                child: Column(
+                                  children: [
+                                    HeroAppBar(
+                                      animationDelay: _appBarStart,
+                                      animationDuration: _appBarDuration,
+                                      onHomeTap: _scrollToTop,
+                                      onAboutTap: _scrollToAbout,
+                                    ),
+                                    if (isMobile)
+                                      _MobileHeroLayout(
+                                        dishAnchorKey: _heroDishKey,
+                                        dishTravelProgress: _dishTravelProgress,
+                                      )
+                                    else
+                                      _DesktopHeroLayout(
+                                        dishAnchorKey: _heroDishKey,
+                                        dishTravelProgress: _dishTravelProgress,
+                                      ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                            AboutSection(
+                              key: _aboutKey,
+                              dishTargetKey: _aboutDishKey,
+                              revealProgress: _dishTravelProgress,
+                            ),
+                          ],
+                        ),
                       ),
                     ),
                   ),
                 ),
               ),
-            ),
+              _TravelingDishImage(
+                rootKey: _rootKey,
+                fromKey: _heroDishKey,
+                toKey: _aboutDishKey,
+                progress: _dishTravelProgress,
+              ),
+            ],
           );
         },
       ),
@@ -106,7 +190,13 @@ class _HeroSectionState extends State<HeroSection> {
 }
 
 class _DesktopHeroLayout extends StatelessWidget {
-  const _DesktopHeroLayout();
+  const _DesktopHeroLayout({
+    required this.dishAnchorKey,
+    required this.dishTravelProgress,
+  });
+
+  final GlobalKey dishAnchorKey;
+  final double dishTravelProgress;
 
   @override
   Widget build(BuildContext context) {
@@ -116,7 +206,14 @@ class _DesktopHeroLayout extends StatelessWidget {
         children: [
           Expanded(flex: 11, child: _HeroCopy(isCentered: false)),
           const HorizontalGap(28),
-          const Expanded(flex: 10, child: _HeroVisuals(compact: false)),
+          Expanded(
+            flex: 10,
+            child: _HeroVisuals(
+              compact: false,
+              dishAnchorKey: dishAnchorKey,
+              dishTravelProgress: dishTravelProgress,
+            ),
+          ),
         ],
       ),
     );
@@ -124,17 +221,27 @@ class _DesktopHeroLayout extends StatelessWidget {
 }
 
 class _MobileHeroLayout extends StatelessWidget {
-  const _MobileHeroLayout();
+  const _MobileHeroLayout({
+    required this.dishAnchorKey,
+    required this.dishTravelProgress,
+  });
+
+  final GlobalKey dishAnchorKey;
+  final double dishTravelProgress;
 
   @override
   Widget build(BuildContext context) {
-    return const Padding(
-      padding: EdgeInsets.only(top: 22, bottom: 34),
+    return Padding(
+      padding: const EdgeInsets.only(top: 22, bottom: 34),
       child: Column(
         children: [
-          _HeroCopy(isCentered: true),
-          VerticalGap(28),
-          _HeroVisuals(compact: true),
+          const _HeroCopy(isCentered: true),
+          const VerticalGap(28),
+          _HeroVisuals(
+            compact: true,
+            dishAnchorKey: dishAnchorKey,
+            dishTravelProgress: dishTravelProgress,
+          ),
         ],
       ),
     );
@@ -286,9 +393,15 @@ class _HeroHeadline extends StatelessWidget {
 }
 
 class _HeroVisuals extends StatelessWidget {
-  const _HeroVisuals({required this.compact});
+  const _HeroVisuals({
+    required this.compact,
+    required this.dishAnchorKey,
+    required this.dishTravelProgress,
+  });
 
   final bool compact;
+  final GlobalKey dishAnchorKey;
+  final double dishTravelProgress;
 
   @override
   Widget build(BuildContext context) {
@@ -308,6 +421,8 @@ class _HeroVisuals extends StatelessWidget {
             top: compact ? 58 : 18,
             child: HeroDishShowcase(
               compact: compact,
+              dishAnchorKey: dishAnchorKey,
+              travelProgress: dishTravelProgress,
               animationDelay: introCompleted ? Duration.zero : _dishStart,
               animationDuration: introCompleted
                   ? const Duration(milliseconds: 320)
@@ -327,6 +442,51 @@ class _HeroVisuals extends StatelessWidget {
             ),
           ),
         ],
+      ),
+    );
+  }
+}
+
+class _TravelingDishImage extends StatelessWidget {
+  const _TravelingDishImage({
+    required this.rootKey,
+    required this.fromKey,
+    required this.toKey,
+    required this.progress,
+  });
+
+  final GlobalKey rootKey;
+  final GlobalKey fromKey;
+  final GlobalKey toKey;
+  final double progress;
+
+  @override
+  Widget build(BuildContext context) {
+    final rootBox = rootKey.currentContext?.findRenderObject() as RenderBox?;
+    final fromBox = fromKey.currentContext?.findRenderObject() as RenderBox?;
+    final toBox = toKey.currentContext?.findRenderObject() as RenderBox?;
+
+    if (rootBox == null || fromBox == null || toBox == null || progress <= 0) {
+      return const SizedBox.shrink();
+    }
+
+    final fromOffset = fromBox.localToGlobal(Offset.zero, ancestor: rootBox);
+    final toOffset = toBox.localToGlobal(Offset.zero, ancestor: rootBox);
+    final fromRect = fromOffset & fromBox.size;
+    final toRect = toOffset & toBox.size;
+    final easedProgress = Curves.easeInOutCubic.transform(progress);
+    final rect = Rect.lerp(fromRect, toRect, easedProgress)!;
+    final selectedDish = context.watch<HomeViewModel>().selectedDish;
+
+    return Positioned(
+      left: rect.left,
+      top: rect.top,
+      width: rect.width,
+      height: rect.height,
+      child: IgnorePointer(
+        child: ClipOval(
+          child: Image.asset(selectedDish.dishImage, fit: BoxFit.cover),
+        ),
       ),
     );
   }

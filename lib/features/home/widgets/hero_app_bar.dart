@@ -3,17 +3,22 @@ import 'package:flutter_animate/flutter_animate.dart';
 
 import '../../../core/constants/app_colors.dart';
 import '../../../core/constants/app_constants.dart';
+import '../../../core/constants/app_images.dart';
 import '../../../core/constants/app_text_styles.dart';
 
 class HeroAppBar extends StatelessWidget {
   const HeroAppBar({
     required this.animationDelay,
     required this.animationDuration,
+    required this.onHomeTap,
+    required this.onAboutTap,
     super.key,
   });
 
   final Duration animationDelay;
   final Duration animationDuration;
+  final VoidCallback onHomeTap;
+  final VoidCallback onAboutTap;
 
   @override
   Widget build(BuildContext context) {
@@ -69,21 +74,36 @@ class HeroAppBar extends StatelessWidget {
                     child: Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        Flexible(
-                          child: Text(
-                            AppConstants.heroBrandName,
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                            style: AppTextStyles.headingMedium.copyWith(
-                              color: AppColors.splashTextPrimary,
-                              fontSize: compact ? 17 : 21,
-                              fontWeight: FontWeight.w900,
-                            ),
+                        Semantics(
+                          label: AppConstants.heroBrandName,
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Image.asset(
+                                AppImages.logo,
+                                width: compact ? 38 : 44,
+                                height: compact ? 38 : 44,
+                                fit: BoxFit.contain,
+                              ),
+                              const SizedBox(width: 10),
+                              Text(
+                                'KBC',
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                                style: AppTextStyles.headingMedium.copyWith(
+                                  color: AppColors.splashTextPrimary,
+                                  fontSize: compact ? 18 : 22,
+                                  fontWeight: FontWeight.w900,
+                                  letterSpacing: 0.8,
+                                ),
+                              ),
+                            ],
                           ),
                         ),
                         if (!compact) ...[
                           const SizedBox(width: 30),
-                          const _NavItem('Home'),
+                          _NavItem('Home', onTap: onHomeTap),
+                          _NavItem('About', onTap: onAboutTap),
                           const _NavItem('Menu'),
                           const _NavItem('Catering'),
                           const _NavItem('Contact'),
@@ -122,20 +142,27 @@ class HeroAppBar extends StatelessWidget {
 }
 
 class _NavItem extends StatelessWidget {
-  const _NavItem(this.label);
+  const _NavItem(this.label, {this.onTap});
 
   final String label;
+  final VoidCallback? onTap;
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 12),
-      child: Text(
-        label,
-        style: AppTextStyles.label.copyWith(
-          color: AppColors.splashTextMuted,
-          fontSize: 13,
-          fontWeight: FontWeight.w700,
+    return MouseRegion(
+      cursor: onTap == null ? MouseCursor.defer : SystemMouseCursors.click,
+      child: GestureDetector(
+        onTap: onTap,
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+          child: Text(
+            label,
+            style: AppTextStyles.label.copyWith(
+              color: AppColors.splashTextMuted,
+              fontSize: 13,
+              fontWeight: FontWeight.w700,
+            ),
+          ),
         ),
       ),
     );

@@ -11,12 +11,16 @@ class HeroDishShowcase extends StatefulWidget {
   const HeroDishShowcase({
     required this.animationDelay,
     required this.animationDuration,
+    required this.dishAnchorKey,
+    required this.travelProgress,
     this.compact = false,
     super.key,
   });
 
   final Duration animationDelay;
   final Duration animationDuration;
+  final GlobalKey dishAnchorKey;
+  final double travelProgress;
   final bool compact;
 
   @override
@@ -113,30 +117,36 @@ class _HeroDishShowcaseState extends State<HeroDishShowcase>
                           ),
                         ),
                       ),
-                      AnimatedSwitcher(
-                        duration: const Duration(milliseconds: 520),
-                        switchInCurve: Curves.easeOutCubic,
-                        switchOutCurve: Curves.easeInCubic,
-                        transitionBuilder: (child, animation) {
-                          final offset = Tween<Offset>(
-                            begin: const Offset(0.34, 0),
-                            end: Offset.zero,
-                          ).animate(animation);
-                          return FadeTransition(
-                            opacity: animation,
-                            child: SlideTransition(
-                              position: offset,
-                              child: child,
+                      KeyedSubtree(
+                        key: widget.dishAnchorKey,
+                        child: Opacity(
+                          opacity: widget.travelProgress > 0.02 ? 0 : 1,
+                          child: AnimatedSwitcher(
+                            duration: const Duration(milliseconds: 520),
+                            switchInCurve: Curves.easeOutCubic,
+                            switchOutCurve: Curves.easeInCubic,
+                            transitionBuilder: (child, animation) {
+                              final offset = Tween<Offset>(
+                                begin: const Offset(0.34, 0),
+                                end: Offset.zero,
+                              ).animate(animation);
+                              return FadeTransition(
+                                opacity: animation,
+                                child: SlideTransition(
+                                  position: offset,
+                                  child: child,
+                                ),
+                              );
+                            },
+                            child: Image.asset(
+                              selectedDish.dishImage,
+                              key: ValueKey(selectedDish.title),
+                              semanticLabel: selectedDish.title,
+                              width: dishSize,
+                              height: dishSize,
+                              fit: BoxFit.cover,
                             ),
-                          );
-                        },
-                        child: Image.asset(
-                          selectedDish.dishImage,
-                          key: ValueKey(selectedDish.title),
-                          semanticLabel: selectedDish.title,
-                          width: dishSize,
-                          height: dishSize,
-                          fit: BoxFit.cover,
+                          ),
                         ),
                       ),
                     ],

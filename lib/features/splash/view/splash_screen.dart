@@ -491,7 +491,7 @@ class _CookingScene extends StatelessWidget {
                 ),
           ),
           Positioned(
-            bottom: sceneHeight * 0.11,
+            bottom: sceneHeight * 0.15,
             child: SplashCookingPot(width: potWidth)
                 .animate()
                 .fadeIn(

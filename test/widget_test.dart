@@ -57,7 +57,7 @@ void main() {
     await tester.pump(AppConstants.splashDuration);
     await tester.pump(const Duration(seconds: 5));
 
-    expect(find.text(AppConstants.heroBrandName), findsOneWidget);
+    expect(find.text('KBC'), findsOneWidget);
     expect(
       find.text(AppConstants.heroHeadline, findRichText: true),
       findsOneWidget,
