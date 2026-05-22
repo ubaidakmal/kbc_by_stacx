@@ -1,7 +1,7 @@
 class AppConstants {
   const AppConstants._();
 
-  static const String brandName = 'Biryani House Sugar Land';
+  static const String brandName = 'Biryani House by Stacx Marketing';
   static const String splashHeadline = 'Cooking the next hot batch';
   static const String splashSubheading =
       'Fresh Karachi style biryani, fired up for Sugar Land.';
@@ -61,6 +61,10 @@ class AppConstants {
   static const String hungryOrderCta = 'Order Now';
   static const String hungryCallCta = 'Call';
   static const String hungryDmCta = 'DM on Instagram';
+  static const String footerTagline =
+      'Authentic Karachi biryani, bold spices, and family-ready trays in Houston.';
+  static const String footerCopyright =
+      'Copyright © 2026 Karachi Biryani Center. Designed by Stacx Marketing.';
 
   static const Duration splashDuration = Duration(seconds: 6);
   static const double maxContentWidth = 680;

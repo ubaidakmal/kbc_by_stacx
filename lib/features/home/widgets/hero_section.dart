@@ -12,6 +12,7 @@ import '../../../core/widgets/app_spacing.dart';
 import '../view_model/home_view_model.dart';
 import 'about_section.dart';
 import 'catering_section.dart';
+import 'footer_section.dart';
 import 'hero_app_bar.dart';
 import 'hero_background.dart';
 import 'hero_dish_showcase.dart';
@@ -349,6 +350,7 @@ class _HeroSectionState extends State<HeroSection> {
                               key: _visitKey,
                               revealProgress: _visitRevealProgress,
                             ),
+                            const FooterSection(),
                           ],
                         ),
                       ),
