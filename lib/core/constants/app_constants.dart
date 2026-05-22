@@ -36,6 +36,10 @@ class AppConstants {
   static const String cateringDescription =
       'Catering trays for birthdays, office lunches, family events, community gatherings, and weekend get-togethers. Choose chicken, beef, mutton, raita, drinks, and custom portions.';
   static const String cateringCta = 'Ask for catering quote';
+  static const String reviewsEyebrow = 'Reviews';
+  static const String reviewsHeadline = 'Google-style proof that sells.';
+  static const String reviewsDescription =
+      'Clean review cards help build trust before the customer taps order.';
 
   static const Duration splashDuration = Duration(seconds: 6);
   static const double maxContentWidth = 680;

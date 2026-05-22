@@ -17,6 +17,7 @@ import 'hero_background.dart';
 import 'hero_dish_showcase.dart';
 import 'hero_food_selector.dart';
 import 'menu_section.dart';
+import 'reviews_section.dart';
 import 'why_customers_section.dart';
 
 const _appBarStart = Duration.zero;
@@ -50,12 +51,14 @@ class _HeroSectionState extends State<HeroSection> {
   final _menuKey = GlobalKey();
   final _whyKey = GlobalKey();
   final _cateringKey = GlobalKey();
+  final _reviewsKey = GlobalKey();
   final _heroDishKey = GlobalKey();
   final _aboutDishKey = GlobalKey();
   double _dishTravelProgress = 0;
   double _menuRevealProgress = 0;
   double _whyRevealProgress = 0;
   double _cateringRevealProgress = 0;
+  double _reviewsRevealProgress = 0;
   double _lastScrollOffset = 0;
 
   @override
@@ -86,12 +89,14 @@ class _HeroSectionState extends State<HeroSection> {
     final nextMenuProgress = _calculateMenuProgress(viewportHeight);
     final nextWhyProgress = _calculateWhyProgress(viewportHeight);
     final nextCateringProgress = _calculateCateringProgress(viewportHeight);
+    final nextReviewsProgress = _calculateReviewsProgress(viewportHeight);
     final nextScrollOffset = _scrollController.offset;
 
     if ((nextProgress - _dishTravelProgress).abs() < 0.01 &&
         (nextMenuProgress - _menuRevealProgress).abs() < 0.01 &&
         (nextWhyProgress - _whyRevealProgress).abs() < 0.01 &&
         (nextCateringProgress - _cateringRevealProgress).abs() < 0.01 &&
+        (nextReviewsProgress - _reviewsRevealProgress).abs() < 0.01 &&
         (nextScrollOffset - _lastScrollOffset).abs() < 0.5) {
       return;
     }
@@ -101,6 +106,7 @@ class _HeroSectionState extends State<HeroSection> {
       _menuRevealProgress = nextMenuProgress;
       _whyRevealProgress = nextWhyProgress;
       _cateringRevealProgress = nextCateringProgress;
+      _reviewsRevealProgress = nextReviewsProgress;
       _lastScrollOffset = nextScrollOffset;
     });
   }
@@ -113,6 +119,21 @@ class _HeroSectionState extends State<HeroSection> {
 
     final menuTop = menuBox.localToGlobal(Offset.zero, ancestor: rootBox).dy;
     return ((viewportHeight - menuTop) / (viewportHeight * 0.92))
+        .clamp(0.0, 1.0)
+        .toDouble();
+  }
+
+  double _calculateReviewsProgress(double viewportHeight) {
+    final rootBox = _rootKey.currentContext?.findRenderObject() as RenderBox?;
+    final reviewsBox =
+        _reviewsKey.currentContext?.findRenderObject() as RenderBox?;
+
+    if (rootBox == null || reviewsBox == null) return _reviewsRevealProgress;
+
+    final reviewsTop = reviewsBox
+        .localToGlobal(Offset.zero, ancestor: rootBox)
+        .dy;
+    return ((viewportHeight - reviewsTop) / (viewportHeight * 0.86))
         .clamp(0.0, 1.0)
         .toDouble();
   }
@@ -263,6 +284,10 @@ class _HeroSectionState extends State<HeroSection> {
                             CateringSection(
                               key: _cateringKey,
                               revealProgress: _cateringRevealProgress,
+                            ),
+                            ReviewsSection(
+                              key: _reviewsKey,
+                              revealProgress: _reviewsRevealProgress,
                             ),
                           ],
                         ),

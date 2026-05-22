@@ -63,6 +63,18 @@ class CateringMetric {
   final bool isTextMetric;
 }
 
+class ReviewItem {
+  const ReviewItem({
+    required this.name,
+    required this.initial,
+    required this.quote,
+  });
+
+  final String name;
+  final String initial;
+  final String quote;
+}
+
 class HomeViewModel extends ChangeNotifier {
   static const int visibleFoodCount = 3;
 
@@ -242,6 +254,39 @@ class HomeViewModel extends ChangeNotifier {
       label: 'Quotes',
       suffix: 'Custom',
       isTextMetric: true,
+    ),
+  ];
+
+  final List<ReviewItem> reviews = const [
+    ReviewItem(
+      name: 'Ayesha K.',
+      initial: 'A',
+      quote:
+          'The spice level was perfect and the rice was fluffy. This is the kind of biryani you crave again the next day.',
+    ),
+    ReviewItem(
+      name: 'Hamza R.',
+      initial: 'H',
+      quote:
+          'Ordered a family tray and everyone loved it. Portions were big and pickup was smooth.',
+    ),
+    ReviewItem(
+      name: 'Maya S.',
+      initial: 'M',
+      quote:
+          'Fresh, flavorful, and the raita hit different. Easily one of my favorite spots in Sugar Land.',
+    ),
+    ReviewItem(
+      name: 'Bilal N.',
+      initial: 'B',
+      quote:
+          'The daighi flavor tasted authentic and nostalgic. Bold spices without feeling heavy.',
+    ),
+    ReviewItem(
+      name: 'Sara T.',
+      initial: 'S',
+      quote:
+          'We used them for a small office lunch and the trays disappeared fast. Great value and great flavor.',
     ),
   ];
 
