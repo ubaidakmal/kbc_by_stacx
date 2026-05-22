@@ -50,7 +50,17 @@ class AppConstants {
   static const String visitHoursLabel = 'Open today';
   static const String visitHours = '11:00 am - 10:00 pm';
   static const String visitCta = 'Contact Us';
-  static const String visitDirections = 'Get directions';
+  static const String socialEyebrow = 'Instagram';
+  static const String socialHeadline =
+      'Fresh drops, weekend specials, and behind-the-scenes cooking.';
+  static const String socialCta = 'Follow on Instagram';
+  static const String hungryEyebrow = 'Ready to eat?';
+  static const String hungryHeadline = 'Hungry now?';
+  static const String hungryDescription =
+      'Call, order, or DM to reserve your tray while the next hot batch is cooking.';
+  static const String hungryOrderCta = 'Order Now';
+  static const String hungryCallCta = 'Call';
+  static const String hungryDmCta = 'DM on Instagram';
 
   static const Duration splashDuration = Duration(seconds: 6);
   static const double maxContentWidth = 680;
