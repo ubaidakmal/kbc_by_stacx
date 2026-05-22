@@ -26,6 +26,11 @@ class AppConstants {
   static const String menuRollsTitle = 'BBQ Platters & Paratha Rolls';
   static const String menuRollsDescription =
       'Authentic Karachi street-style paratha rolls packed with fresh, juicy fillings wrapped in flaky golden paratha. Saucy, flavorful, and irresistibly mouthwatering.';
+  static const String whyEyebrow = 'Why Customers Love Us';
+  static const String whyHeadline =
+      'Built around flavor, speed, and family portions.';
+  static const String whyDescription =
+      'A premium Karachi comfort-food experience made for bold cravings, easy pickup, and generous meals that bring people together.';
 
   static const Duration splashDuration = Duration(seconds: 6);
   static const double maxContentWidth = 680;

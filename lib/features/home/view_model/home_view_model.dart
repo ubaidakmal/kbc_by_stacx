@@ -42,6 +42,13 @@ class MenuItem {
   final String image;
 }
 
+class WhyStep {
+  const WhyStep({required this.title, required this.description});
+
+  final String title;
+  final String description;
+}
+
 class HomeViewModel extends ChangeNotifier {
   static const int visibleFoodCount = 3;
 
@@ -176,6 +183,34 @@ class HomeViewModel extends ChangeNotifier {
               'A generous tray of signature biryani layered for sharing with family-style warmth.',
         ),
       ],
+    ),
+  ];
+
+  final List<WhyStep> whySteps = const [
+    WhyStep(
+      title: 'Fresh Cooked',
+      description: 'Every batch is made hot, aromatic, and ready to serve.',
+    ),
+    WhyStep(
+      title: 'Bold Spices',
+      description: 'Real desi masala, layered flavor, and the right kick.',
+    ),
+    WhyStep(
+      title: 'Big Portions',
+      description: 'Generous plates made for hungry people and happy families.',
+    ),
+    WhyStep(
+      title: 'Family Dinner Ready',
+      description: 'Easy pickup for weeknight dinners and weekend cravings.',
+    ),
+    WhyStep(
+      title: 'Pickup Available',
+      description: 'Fast pickup flow for Houston and Sugar Land customers.',
+    ),
+    WhyStep(
+      title: 'Catering Friendly',
+      description:
+          'Trays and packages for birthdays, office lunches, and events.',
     ),
   ];
 
