@@ -1,7 +1,7 @@
 class AppConstants {
   const AppConstants._();
 
-  static const String brandName = 'Biryani House by Stacx Marketing';
+  static const String brandName = 'KBC By Stacx';
   static const String splashHeadline = 'Cooking the next hot batch';
   static const String splashSubheading =
       'Fresh Karachi style biryani, fired up for Sugar Land.';
